@@ -1,5 +1,5 @@
 import { Pick1th } from '../../../submodule/type';
-import { textMessageFactory, imageMessageFactory, noteMessageFactory } from '../factory';
+import { textMessageFactory, imageMessageFactory, noteMessageFactory } from '../../../domain/message/factory';
 import { MessageOneToOneRepository } from '../../../repository/message/messageOneToOne';
 
 export async function sendImageMessage(input: Pick1th<typeof imageMessageFactory>) {
