@@ -5,6 +5,7 @@
     "outDir": "lib",
     "sourceMap": true,
     "esModuleInterop": true,
+    "declaration": true,
     "target": "es6"
   },
   "compileOnSave": true,
