@@ -1,8 +1,8 @@
 import firebase from 'firebase/app'
 
 let firestore: firebase.firestore.Firestore
-export function installApp(firestore: firebase.firestore.Firestore) {
-  firestore = firestore
+export function installApp(instance: firebase.firestore.Firestore) {
+  firestore = instance
 }
 
 const { auth } = firebase
