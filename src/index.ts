@@ -1,0 +1,1 @@
+export { installApp } from "./firebase";
