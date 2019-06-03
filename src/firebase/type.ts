@@ -1,4 +1,4 @@
-import firebase from 'firebase/app'
+import * as firebase from 'firebase/app'
 
 type Timestamp = firebase.firestore.Timestamp
 type Query = firebase.firestore.Query
