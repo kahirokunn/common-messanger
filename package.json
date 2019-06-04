@@ -21,10 +21,10 @@
   "types": "lib/index.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "^3.5.1",
     "firebase": "6.0.2",
     "rxfire": "^3.5.0",
-    "rxjs": "^6.5.2"
+    "rxjs": "^6.5.2",
+    "typescript": "^3.5.1"
   },
   "peerDependencies": {
     "firebase": "6.0.2",

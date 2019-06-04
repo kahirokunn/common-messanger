@@ -1,6 +1,6 @@
 import { Message } from '../../../../entity/message'
 import { collectionData } from 'rxfire/firestore'
-import { filter, map, tap } from 'rxjs/operators'
+import { filter, map } from 'rxjs/operators'
 import { Timestamp, Query } from '../../../../firebase/type'
 import { PaginationObservableFactory } from '../../observableFactory';
 import { getOwnId } from '../../../../domain/auth';
