@@ -1,29 +1,39 @@
+export const GROUP = {
+  name: 'group',
+  children: {
+    SENT: {
+      name: 'sent',
+      children: {}
+    }
+  }
+}
 export const USER = {
   name: 'user',
   children: {
     SENT_MESSAGE_ADMIN: {
       name: 'sentMessageAdmin',
-      children: []
+      children: {}
     },
     SENT_MESSAGE_ONE_TO_ONE: {
       name: 'sentMessageOneToOne',
-      children: []
-    },
-    SENT_MESSAGE_GROUP: {
-      name: 'sentMessageOneToOne',
-      children: []
+      children: {}
     },
     MESSAGE_ADMIN: {
       name: 'messageAdmin',
-      children: []
+      children: {}
     },
     MESSAGE_ONE_TO_ONE: {
       name: 'messageOneToOne',
-      children: []
+      children: {}
     },
-    MESSAGE_GROUP: {
-      name: 'messageOneToOne',
-      children: []
+    GROUP: {
+      name: GROUP.name,
+      children: {
+        MESSAGE_GROUP: {
+          name: 'messageGroup',
+          children: {}
+        }
+      }
     }
-  }
+  },
 } as const

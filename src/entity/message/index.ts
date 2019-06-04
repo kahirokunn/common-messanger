@@ -11,19 +11,22 @@ type Base = {
   createdAt: Date
 }
 
-export type TextMessage = Base & {
+export type ToTextMessage<T> = T & {
   type: MessageType.text
   text: string
 }
+export type TextMessage = ToTextMessage<Base>
 
-export type NoteMessage = Base & {
+export type ToNoteMessage<T> = T & {
   type: MessageType.note
   noteId: string
 }
+export type NoteMessage = ToNoteMessage<Base>
 
-export type ImageMessage = Base & {
+export type ToImageMessage<T> = T & {
   type: MessageType.image
   imageUrl: string
 }
+export type ImageMessage = ToImageMessage<Base>
 
 export type Message = TextMessage | NoteMessage | ImageMessage
