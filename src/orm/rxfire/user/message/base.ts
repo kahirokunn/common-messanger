@@ -12,11 +12,11 @@ export type Document = Message & { createdAt: Timestamp }
 export function messageMapper(messageDocRef: Document): Message {
   return {
     ...messageDocRef,
-    createdAt: messageDocRef.createdAt ? messageDocRef.createdAt.toDate() : new Date(),
+    createdAt: messageDocRef.createdAt.toDate(),
   }
 }
 
-function getPaginationQuery(query: Query, limit: number, startAfter?: Date) {
+export function getPaginationQuery(query: Query, limit: number, startAfter?: Date) {
   query = query.orderBy('createdAt', 'desc').limit(limit)
   if (startAfter) {
     query = query.startAfter(startAfter)
