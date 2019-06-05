@@ -1,6 +1,6 @@
 import { Observable, Subject, Subscription } from 'rxjs'
 import { GroupMessage } from '../../../entity/messageGroup'
-import { MessageGroupObservable } from '../../../orm/rxfire/user/messageGroup'
+import { MessageGroupObservable } from '../../../orm/rxfire/account/messageGroup'
 
 
 export class GroupMessageObserver {

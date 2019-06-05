@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import { GROUP } from '../../../src/firebase/collectionSchema'
 import { MessageGroupRepository } from '../domain/repository/messageGroup';
-import { Document as MessageDoc } from '../../../src/orm/rxfire/user/messageGroup'
+import { Document as MessageDoc } from '../../../src/orm/rxfire/account/messageGroup'
 
 const firestore = admin.firestore()
 

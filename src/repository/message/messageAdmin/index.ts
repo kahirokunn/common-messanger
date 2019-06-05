@@ -1,8 +1,8 @@
 import { BaseMessageRepository } from "../base";
-import { USER } from "../../../firebase/collectionSchema";
+import { ACCOUNT } from "../../../firebase/collectionSchema";
 
 export class MessageAdminRepository extends BaseMessageRepository {
   public messageCollectionName() {
-    return USER.children.SENT_MESSAGE_ADMIN.name
+    return ACCOUNT.children.SENT_MESSAGE_ADMIN.name
   }
 }

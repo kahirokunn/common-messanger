@@ -8,8 +8,8 @@ export const GROUP = {
   }
 }
 
-export const USER = {
-  name: 'user',
+export const ACCOUNT = {
+  name: 'account',
   children: {
     SENT_MESSAGE_ADMIN: {
       name: 'sentMessageAdmin',
@@ -44,5 +44,5 @@ export function sentMessageCollectionPath(input: { groupId: string }) {
 }
 
 export function buildGroupMessageCollectionPath(input: { accountId: string, groupId: string }) {
-  return `${USER.name}/${input.accountId}/${USER.children.GROUP.name}/${input.groupId}/${USER.children.GROUP.children.MESSAGE_GROUP.name}`
+  return `${ACCOUNT.name}/${input.accountId}/${ACCOUNT.children.GROUP.name}/${input.groupId}/${ACCOUNT.children.GROUP.children.MESSAGE_GROUP.name}`
 }

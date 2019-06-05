@@ -1,7 +1,7 @@
 import { firebase, firestore } from "../../firebase";
 import { TextMessage, NoteMessage, ImageMessage, MessageType } from "../../entity/message";
 import { Omit } from "../../submodule/type";
-import { USER } from "../../firebase/collectionSchema";
+import { ACCOUNT } from "../../firebase/collectionSchema";
 
 type OmitIdTextMessage = Omit<TextMessage, 'id'>
 type OmitIdNoteMessage = Omit<NoteMessage, 'id'>
@@ -12,7 +12,7 @@ export abstract class BaseMessageRepository {
   abstract messageCollectionName(): string
 
   public create(message: OmitIdMessage) {
-    const collectionPath = `${USER.name}/${message.sentFromAccountId}/${this.messageCollectionName()}`
+    const collectionPath = `${ACCOUNT.name}/${message.sentFromAccountId}/${this.messageCollectionName()}`
     return firestore.collection(collectionPath).doc().set(mapEntityToDTO(message))
   }
 }

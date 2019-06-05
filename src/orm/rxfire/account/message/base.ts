@@ -5,7 +5,7 @@ import { Timestamp, Query } from '../../../../firebase/type'
 import { PaginationObservableFactory } from '../../observableFactory';
 import { getOwnId } from '../../../../domain/auth';
 import { firestore } from '../../../../firebase';
-import { USER } from '../../../../firebase/collectionSchema';
+import { ACCOUNT } from '../../../../firebase/collectionSchema';
 
 export type Document = Message & { createdAt: Timestamp }
 
@@ -28,7 +28,7 @@ export abstract class BaseMessageObservable implements PaginationObservableFacto
   abstract messageCollectionName(): string
 
   public factory(limit: number, startAfter?: Date) {
-    const collectionPath = `${USER.name}/${getOwnId()}/${this.messageCollectionName()}`
+    const collectionPath = `${ACCOUNT.name}/${getOwnId()}/${this.messageCollectionName()}`
     const query = firestore.collection(collectionPath)
     return collectionData<Document>(getPaginationQuery(query, limit, startAfter), 'id')
       .pipe(filter((dataList) => dataList.length > 0))

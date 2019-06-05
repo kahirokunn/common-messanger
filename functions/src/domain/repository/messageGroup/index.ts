@@ -1,6 +1,6 @@
 import { firestore as firestoreFactory } from 'firebase-admin'
 import { GROUP, buildGroupMessageCollectionPath } from '../../../../../src/firebase/collectionSchema'
-import { Document as MessageDoc } from '../../../../../src/orm/rxfire/user/messageGroup'
+import { Document as MessageDoc } from '../../../../../src/orm/rxfire/account/messageGroup'
 import { omit } from '../../../../../src/submodule'
 import { Group as GroupEntity } from '../../../../../src/entity/group'
 
@@ -16,7 +16,7 @@ export class MessageGroupRepository {
     }))
     const batch = this.firestore.batch()
     collectionPathList.forEach(collectionPath => {
-      batch.set(this.firestore.collection(collectionPath).doc(`receive_${message.id}`), omit(message, 'id'))
+      batch.set(this.firestore.collection(collectionPath).doc(message.id), omit(message, 'id'))
     })
     return batch.commit()
   }
