@@ -67,3 +67,5 @@ lib/
 
 # firebase
 .firebaserc
+
+.expo
