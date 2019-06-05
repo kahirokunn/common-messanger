@@ -1,9 +1,9 @@
 {
-  "apiKey": "AIzaSyDAVzI98ECJP-kRjdbNusgsT0fBz3268kw",
-  "authDomain": "expo-firebase-dd12e.firebaseapp.com",
-  "databaseURL": "https://expo-firebase-dd12e.firebaseio.com",
-  "projectId": "expo-firebase-dd12e",
-  "storageBucket": "expo-firebase-dd12e.appspot.com",
-  "messagingSenderId": "467271556642",
-  "appId": "1:467271556642:web:8b812141a7732a4f"
+  "apiKey": "***************************",
+  "authDomain": "***********************",
+  "databaseURL": "**********************",
+  "projectId": "************************",
+  "storageBucket": "*********************",
+  "messagingSenderId": "*****************",
+  "appId": "*****************************"
 }
