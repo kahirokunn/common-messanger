@@ -11,11 +11,13 @@ export type FirestoreSchema = {
       // group/{groupId}/sentに書き込まれたらここにコピーされる
       messageGroup: Collection<GroupMessage>
     }>,
-    sentMessageOneToOne: Collection<Message>
     // sentMessageOneToOneに書き込まれたら、cloud functionでmessageOneToOneにコピーする
+    sentMessageOneToOne: Collection<Message>
     messageOneToOne: Collection<Message>
 
+    // sentMessageAdminに書き込まれたら、cloud functionでmessageAdminにコピーする
     sentMessageAdmin: Collection<Message>
+    messageAdmin: Collection<Message>
   }>,
   group: Collection<Omit<Group, 'id'> & {
     sent: Collection<GroupMessage>
