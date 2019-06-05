@@ -10,10 +10,9 @@ const path = `${USER.name}/{userId}/${USER.children.SENT_MESSAGE_ADMIN.name}/{me
 export const copySentAdminMessageToTargets = functions
   .firestore
   .document(path)
-  .onCreate((snap, context) => {
-    const { messageId } = context.params
-    const message = { ...snap.data(), id: messageId } as MessageDoc
+  .onCreate((snap) => {
+    const message = { ...snap.data(), id: snap.id } as MessageDoc
     return new SentMessageOneToOneRepository(firestore)
-      .send(message, [message.sentFromAccountId, message.sentToAccountId])
-      .then(() => console.log('adminのMessageを受信しました'))
+      .send(message)
+      .then(() => console.log('adminのMessageを配信しました'))
   })

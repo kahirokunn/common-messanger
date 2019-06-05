@@ -4,3 +4,4 @@ admin.initializeApp(functions.config().firebase)
 
 export * from './functions/copySentOneToOneMessageToTargets'
 export * from './functions/copySentAdminMessageToTargets'
+export * from './functions/copySentMessageToGroup'

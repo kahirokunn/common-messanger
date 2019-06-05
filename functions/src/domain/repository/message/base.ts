@@ -8,9 +8,9 @@ export abstract class BaseSentMessageRepository {
 
   abstract messageCollectionName(): string
 
-  public send(message: MessageDoc, sentToIds: string[]) {
+  public send(message: MessageDoc) {
     const messageCollectionName = this.messageCollectionName()
-    const collectionPathList = sentToIds.map(id => `${USER.name}/${id}/${messageCollectionName}`)
+    const collectionPathList = [message.sentFromAccountId, message.sentToAccountId].map(id => `${USER.name}/${id}/${messageCollectionName}`)
     const batch = this.firestore.batch()
     collectionPathList.forEach(collectionPath => {
       batch.set(this.firestore.collection(collectionPath).doc(`receive_${message.id}`), omit(message, 'id'))

@@ -6,14 +6,13 @@ import { Document as MessageDoc } from '../../../src/orm/rxfire/user/message/bas
 
 const firestore = admin.firestore()
 
-const path = `${USER.name}/{userId}/${USER.children.SENT_MESSAGE_ONE_TO_ONE.name}/{messageId}`
+const path = `${USER.name}/{userId}/${USER.children.SENT_MESSAGE_ONE_TO_ONE.name}/{mesasgeId}`
 export const copySentOneToOneMessageToTargets = functions
   .firestore
   .document(path)
-  .onCreate((snap, context) => {
-    const { messageId } = context.params
-    const message = { ...snap.data(), id: messageId } as MessageDoc
+  .onCreate((snap) => {
+    const message = { ...snap.data(), id: snap.id } as MessageDoc
     return new SentMessageOneToOneRepository(firestore)
-      .send(message, [message.sentFromAccountId, message.sentToAccountId])
-      .then(() => console.log('oneToOneのMessageを受信しました'))
+      .send(message)
+      .then(() => console.log('oneToOneのMessageを配信しました'))
   })

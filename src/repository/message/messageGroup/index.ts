@@ -6,7 +6,7 @@ import {
   GroupMessageType,
 } from "../../../entity/messageGroup";
 import { Omit } from "../../../submodule/type";
-import { GROUP } from "../../../firebase/collectionSchema";
+import { GROUP, sentMessageCollectionPath } from "../../../firebase/collectionSchema";
 
 type OmitIdTextMessage = Omit<GroupTextMessage, 'id'>
 type OmitIdNoteMessage = Omit<GroupNoteMessage, 'id'>
@@ -17,7 +17,7 @@ export class MessageGroupRepository {
 
   public create(message: OmitIdMessage) {
     return firestore
-      .collection(`${GROUP.name}/${message.groupId}/${GROUP.children.SENT.name}`)
+      .collection(sentMessageCollectionPath({ groupId: message.groupId }))
       .doc()
       .set(mapEntityToDTO(message))
   }
