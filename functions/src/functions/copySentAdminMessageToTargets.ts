@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import { ACCOUNT } from '../../../src/firebase/collectionSchema'
-import { SentMessageOneToOneRepository } from '../domain/repository/message/messageOneToOne';
+import { SentMessageAdminRepository } from '../domain/repository/message/messageAdmin';
 import { Document as MessageDoc } from '../../../src/orm/rxfire/account/message/base'
 
 const firestore = admin.firestore()
@@ -12,7 +12,7 @@ export const copySentAdminMessageToTargets = functions
   .document(path)
   .onCreate((snap) => {
     const message = { ...snap.data(), id: snap.id } as MessageDoc
-    return new SentMessageOneToOneRepository(firestore)
+    return new SentMessageAdminRepository(firestore)
       .send(message)
       .then(() => console.log('adminのMessageを配信しました'))
   })

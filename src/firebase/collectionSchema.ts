@@ -1,3 +1,27 @@
+import { GroupMessage } from "../entity/messageGroup";
+import { Group } from "../entity/group";
+import { Omit } from "../submodule/type";
+import { Message } from "../entity/message";
+
+type Collection<T> = { [id: string]: T }
+
+export type FirestoreSchema = {
+  account: Collection<{
+    group: Collection<{
+      // group/{groupId}/sentに書き込まれたらここにコピーされる
+      messageGroup: Collection<GroupMessage>
+    }>,
+    sentMessageOneToOne: Collection<Message>
+    // sentMessageOneToOneに書き込まれたら、cloud functionでmessageOneToOneにコピーする
+    messageOneToOne: Collection<Message>
+
+    sentMessageAdmin: Collection<Message>
+  }>,
+  group: Collection<Omit<Group, 'id'> & {
+    sent: Collection<GroupMessage>
+  }>
+}
+
 export const GROUP = {
   name: 'group',
   children: {
