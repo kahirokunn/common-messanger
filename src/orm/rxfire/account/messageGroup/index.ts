@@ -17,7 +17,7 @@ export function messageMapper(messageDocRef: Document): GroupMessage {
 }
 
 export class MessageGroupObservable {
-  public factory(groupId: string, limit: number, startAfter?: Date) {
+  public factory(memberIds: Array<string>, groupId: string, limit: number, startAfter?: Date) {
     const collectionPath = buildGroupMessageCollectionPath({ accountId: getOwnId(), groupId })
     const query = firestore.collection(collectionPath)
 

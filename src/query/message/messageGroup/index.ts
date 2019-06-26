@@ -11,8 +11,8 @@ export class GroupMessageObserver {
     return this._messages
   }
 
-  public fetchMessage(groupId: string, limit: number, startAfter?: Date) {
-    const subscription = new MessageGroupObservable().factory(groupId, limit, startAfter)
+  public fetchMessage(memberIds: Array<string>, groupId: string, limit: number, startAfter?: Date) {
+    const subscription = new MessageGroupObservable().factory(memberIds, groupId, limit, startAfter)
       .subscribe(this._messages)
     this._subscriptions.push(subscription)
   }
