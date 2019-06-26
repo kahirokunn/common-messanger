@@ -39,6 +39,7 @@ type UnionDTO = TextMessageDTO | NoteMessageDTO | ImageMessageDTO
 function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
   if (isNote(message)) {
     return {
+      memberIds: message.memberIds,
       groupId: message.groupId,
       noteId: message.noteId,
       sentFromAccountId: message.sentFromAccountId,
@@ -47,6 +48,7 @@ function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
     }
   } else if (isText(message)) {
     return {
+      memberIds: message.memberIds,
       groupId: message.groupId,
       sentFromAccountId: message.sentFromAccountId,
       type: message.type,
@@ -55,6 +57,7 @@ function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
     }
   } else {
     return {
+      memberIds: message.memberIds,
       groupId: message.groupId,
       sentFromAccountId: message.sentFromAccountId,
       type: message.type,

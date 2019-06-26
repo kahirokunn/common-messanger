@@ -1,6 +1,7 @@
 import { ToTextMessage, ToNoteMessage, ToImageMessage } from "../message";
 
 type Base = {
+  memberIds: Array<string>
   id: string
   groupId: string
   sentFromAccountId: string
