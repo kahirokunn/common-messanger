@@ -44,6 +44,7 @@ function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
       noteId: message.noteId,
       sentFromAccountId: message.sentFromAccountId,
       type: message.type,
+      text: message.text,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     }
   } else if (isText(message)) {

@@ -19,6 +19,7 @@ export type TextMessage = ToTextMessage<Base>
 
 export type ToNoteMessage<T> = T & {
   type: MessageType.note
+  text: string
   noteId: string
 }
 export type NoteMessage = ToNoteMessage<Base>
