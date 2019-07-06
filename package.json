@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "common-message",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build"
