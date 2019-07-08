@@ -10,9 +10,9 @@ const path = `${ACCOUNT.name}/{accountId}/${ACCOUNT.children.SENT_MESSAGE_ONE_TO
 export const copySentOneToOneMessageToTargets = functions
   .firestore
   .document(path)
-  .onCreate((snap) => {
+  .onCreate(async (snap) => {
     const message = { ...snap.data(), id: snap.id } as MessageDoc
-    return new SentMessageOneToOneRepository(firestore)
-      .send(message)
-      .then(() => console.log('oneToOneのMessageを配信しました'))
+    const repository = new SentMessageOneToOneRepository(firestore)
+    await repository.send(message)
+    console.log('oneToOneのMessageを配信しました')
   })

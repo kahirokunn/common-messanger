@@ -10,9 +10,9 @@ const path = `${ACCOUNT.name}/{accountId}/${ACCOUNT.children.SENT_MESSAGE_ADMIN.
 export const copySentAdminMessageToTargets = functions
   .firestore
   .document(path)
-  .onCreate((snap) => {
+  .onCreate(async (snap) => {
     const message = { ...snap.data(), id: snap.id } as MessageDoc
-    return new SentMessageAdminRepository(firestore)
-      .send(message)
-      .then(() => console.log('adminのMessageを配信しました'))
+    const repository = new SentMessageAdminRepository(firestore)
+    await repository.send(message)
+    console.log('adminのMessageを配信しました')
   })

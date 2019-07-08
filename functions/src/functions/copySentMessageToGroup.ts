@@ -10,9 +10,9 @@ const path = `${GROUP.name}/{groupId}/${GROUP.children.SENT.name}/{messageId}`
 export const copySentMessageToGroup = functions
   .firestore
   .document(path)
-  .onCreate((snap) => {
+  .onCreate(async (snap) => {
     const message = { ...snap.data(), id: snap.id } as MessageDoc
-    return new MessageGroupRepository(firestore)
-      .send(message)
-      .then(() => console.log('groupのMessageを配信しました'))
+    const repository = new MessageGroupRepository(firestore)
+    await repository.send(message)
+    console.log('groupのMessageを配信しました')
   })
