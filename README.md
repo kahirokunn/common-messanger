@@ -24,3 +24,12 @@ const app = firebase.initializeApp({
 const firestore = firebase.firestore(app)
 installApp(firestore)
 ```
+
+## Deploy cloud function
+
+```
+$ cd functions
+$ yarn install
+$ cd ..
+$ firebase deploy --only functions
+```
