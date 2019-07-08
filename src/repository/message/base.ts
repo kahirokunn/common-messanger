@@ -1,5 +1,5 @@
 import { firebase, firestore } from "../../firebase";
-import { TextMessage, NoteMessage, ImageMessage, MessageType } from "../../entity/message";
+import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from "../../entity/message";
 import { Omit } from "../../submodule/type";
 import { ACCOUNT } from "../../firebase/collectionSchema";
 
@@ -18,11 +18,11 @@ export abstract class BaseMessageRepository {
 }
 
 function isText(message: OmitIdMessage): message is OmitIdTextMessage {
-  return message.type == MessageType.text
+  return message.type == MESSAGE_TYPE.TEXT
 }
 
 function isNote(message: OmitIdMessage): message is OmitIdNoteMessage {
-  return message.type == MessageType.note
+  return message.type == MESSAGE_TYPE.NOTE
 }
 
 type TextMessageDTO = Omit<OmitIdTextMessage, 'createdAt'> & { createdAt: firebase.firestore.FieldValue }

@@ -1,5 +1,5 @@
 import { Omit } from "../../submodule/type";
-import { GroupTextMessage, GroupNoteMessage, GroupImageMessage, GroupMessageType } from '../../entity/messageGroup'
+import { GroupTextMessage, GroupNoteMessage, GroupImageMessage, GROUP_MESSAGE_TYPE } from '../../entity/messageGroup'
 import { getOwnId } from "../auth";
 
 type InputText = Omit<Omit<Omit<Omit<GroupTextMessage, 'type'>, 'createdAt'>, 'sentFromAccountId'>, 'id'>
@@ -11,7 +11,7 @@ export function textMessageFactory(input: InputText): Omit<GroupTextMessage, 'id
     ...input,
     createdAt: new Date(),
     sentFromAccountId: getOwnId(),
-    type: GroupMessageType.text,
+    type: GROUP_MESSAGE_TYPE.TEXT,
   }
 }
 
@@ -20,7 +20,7 @@ export function noteMessageFactory(input: InputNote): Omit<GroupNoteMessage, 'id
     ...input,
     createdAt: new Date(),
     sentFromAccountId: getOwnId(),
-    type: GroupMessageType.note,
+    type: GROUP_MESSAGE_TYPE.NOTE,
   }
 }
 
@@ -29,6 +29,6 @@ export function imageMessageFactory(input: InputImage): Omit<GroupImageMessage, 
     ...input,
     createdAt: new Date(),
     sentFromAccountId: getOwnId(),
-    type: GroupMessageType.image,
+    type: GROUP_MESSAGE_TYPE.IMAGE,
   }
 }

@@ -1,7 +1,7 @@
-export enum MessageType {
-  text = 'text',
-  image = 'image',
-  note = 'note',
+export enum MESSAGE_TYPE {
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  NOTE = 'NOTE',
 }
 
 type Base = {
@@ -12,20 +12,20 @@ type Base = {
 }
 
 export type ToTextMessage<T> = T & {
-  type: MessageType.text
+  type: MESSAGE_TYPE.TEXT
   text: string
 }
 export type TextMessage = ToTextMessage<Base>
 
 export type ToNoteMessage<T> = T & {
-  type: MessageType.note
+  type: MESSAGE_TYPE.NOTE
   text: string
   noteId: string
 }
 export type NoteMessage = ToNoteMessage<Base>
 
 export type ToImageMessage<T> = T & {
-  type: MessageType.image
+  type: MESSAGE_TYPE.IMAGE
   imageUrl: string
 }
 export type ImageMessage = ToImageMessage<Base>

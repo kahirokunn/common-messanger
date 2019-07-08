@@ -1,13 +1,13 @@
-import { Message, TextMessage, NoteMessage, ImageMessage, MessageType } from '../../entity/message'
+import { Message, TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from '../../entity/message'
 
 export function isTextMessage(message: Message): message is TextMessage {
-  return message.type == MessageType.text
+  return message.type == MESSAGE_TYPE.TEXT
 }
 
 export function isNoteMessage(message: Message): message is NoteMessage {
-  return message.type == MessageType.note
+  return message.type == MESSAGE_TYPE.NOTE
 }
 
 export function isImageMessage(message: Message): message is ImageMessage {
-  return message.type == MessageType.image
+  return message.type == MESSAGE_TYPE.IMAGE
 }

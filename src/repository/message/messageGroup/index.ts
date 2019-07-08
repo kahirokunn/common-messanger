@@ -3,7 +3,7 @@ import {
   GroupTextMessage,
   GroupNoteMessage,
   GroupImageMessage,
-  GroupMessageType,
+  GROUP_MESSAGE_TYPE,
 } from "../../../entity/messageGroup";
 import { Omit } from "../../../submodule/type";
 import { GROUP, sentMessageCollectionPath } from "../../../firebase/collectionSchema";
@@ -24,11 +24,11 @@ export class MessageGroupRepository {
 }
 
 function isText(message: OmitIdMessage): message is OmitIdTextMessage {
-  return message.type == GroupMessageType.text
+  return message.type == GROUP_MESSAGE_TYPE.TEXT
 }
 
 function isNote(message: OmitIdMessage): message is OmitIdNoteMessage {
-  return message.type == GroupMessageType.note
+  return message.type == GROUP_MESSAGE_TYPE.NOTE
 }
 
 type TextMessageDTO = Omit<OmitIdTextMessage, 'createdAt'> & { createdAt: firebase.firestore.FieldValue }

@@ -16,4 +16,4 @@ export type GroupImageMessage = ToImageMessage<Base>
 
 export type GroupMessage = GroupTextMessage | GroupNoteMessage | GroupImageMessage
 
-export { MessageType as GroupMessageType } from '../message'
+export { MESSAGE_TYPE as GROUP_MESSAGE_TYPE } from '../message'
