@@ -10,7 +10,8 @@ export class MessageGroupRepository {
   public async send(message: MessageDoc) {
     const snap = await this.firestore.collection(GROUP.name).doc(message.groupId).get()
     const group = { ...snap.data(), id: snap.id } as GroupEntity
-    const collectionPathList = group.memberIds.map(accountId => buildGroupMessageCollectionPath({
+
+    const collectionPathList = message.memberIds.map(accountId => buildGroupMessageCollectionPath({
       accountId,
       groupId: group.id
     }))

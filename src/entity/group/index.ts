@@ -1,5 +1,5 @@
 export type Group = {
   id: string
   roomName: string
-  memberIds: string[]
+  memberIds: Array<string>
 }
