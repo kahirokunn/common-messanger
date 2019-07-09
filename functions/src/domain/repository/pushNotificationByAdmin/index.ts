@@ -14,9 +14,9 @@ type Varivables = {
 
 const query = `
   mutation (
-    $sent_to_uid: !ID
-    $message_id: !ID
-    $message_type: !MessageType
+    $sent_to_uid: ID!
+    $message_id: ID!
+    $message_type: PushMessageType!
     $message_text: String
     $image_url: String
   ) {

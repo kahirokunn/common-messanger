@@ -15,15 +15,16 @@ type Varivables = {
 
 const query = `
   mutation (
-    $sent_from: !ID
-    $group_id: !ID
-    $message_id: !ID
-    $message_type: !MessageType
+    $sent_from: ID!
+    $group_id: ID!
+    $message_id: ID!
+    $message_type: PushMessageType!
     $message_text: String
     $image_url: String
   ) {
     PushNotificationByGroup (
       sent_from: $sent_from
+      sent_to_uids: $sent_to_uids
       group_id: $group_id
       message_id: $message_id
       message_type: $message_type
