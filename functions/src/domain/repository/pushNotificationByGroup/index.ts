@@ -6,7 +6,6 @@ type ID = string
 
 type Varivables = {
   sentFrom: ID,
-  sentToUids: ID[],
   groupId: ID,
   messageId: ID,
   messageType: MESSAGE_TYPE
@@ -17,7 +16,6 @@ type Varivables = {
 const query = `
   mutation (
     $sent_from: !ID
-    $sent_to_uids: ![ID]
     $group_id: !ID
     $message_id: !ID
     $message_type: !MessageType
@@ -26,7 +24,6 @@ const query = `
   ) {
     PushNotificationByGroup (
       sent_from: $sent_from
-      sent_to_uids: $sent_to_uids
       group_id: $group_id
       message_id: $message_id
       message_type: $message_type

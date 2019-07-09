@@ -23,7 +23,6 @@ export const copySentMessageToGroup = functions
       pushNotificationByGroup({
         sentFrom: message.sentFromAccountId,
         // 送信者以外に通知
-        sentToUids: message.memberIds.filter(id => id !== message.sentFromAccountId),
         groupId: group.id,
         messageId: message.id,
         messageType: message.type,
