@@ -1,34 +1,26 @@
-import { firebase, firestore } from "../../../firebase";
-import {
-  GroupTextMessage,
-  GroupNoteMessage,
-  GroupImageMessage,
-  GROUP_MESSAGE_TYPE,
-} from "../../../entity/messageGroup";
-import { Omit } from "../../../submodule/type";
-import { GROUP, sentMessageCollectionPath } from "../../../firebase/collectionSchema";
+import { firebase, firestore } from "../firebase";
+import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from "../domain/message/entity";
+import { Omit } from "../submodule/type";
+import { getMessagePath } from "../firebase/collectionSchema";
+import { Id } from "../domain/message/type";
 
-type OmitIdTextMessage = Omit<GroupTextMessage, 'id'>
-type OmitIdNoteMessage = Omit<GroupNoteMessage, 'id'>
-type OmitIdImageMessage = Omit<GroupImageMessage, 'id'>
+type OmitIdTextMessage = Omit<TextMessage, 'id'>
+type OmitIdNoteMessage = Omit<NoteMessage, 'id'>
+type OmitIdImageMessage = Omit<ImageMessage, 'id'>
 type OmitIdMessage = OmitIdTextMessage | OmitIdNoteMessage | OmitIdImageMessage
 
-export class MessageGroupRepository {
-
-  public create(message: OmitIdMessage) {
-    return firestore
-      .collection(sentMessageCollectionPath({ groupId: message.groupId }))
-      .doc()
-      .set(mapEntityToDTO(message))
-  }
+export function sendMessage(roomId: Id, message: OmitIdMessage) {
+  return firestore
+    .collection(getMessagePath(roomId))
+    .add(mapEntityToDTO(message))
 }
 
 function isText(message: OmitIdMessage): message is OmitIdTextMessage {
-  return message.type == GROUP_MESSAGE_TYPE.TEXT
+  return message.type == MESSAGE_TYPE.TEXT
 }
 
 function isNote(message: OmitIdMessage): message is OmitIdNoteMessage {
-  return message.type == GROUP_MESSAGE_TYPE.NOTE
+  return message.type == MESSAGE_TYPE.NOTE
 }
 
 type TextMessageDTO = Omit<OmitIdTextMessage, 'createdAt'> & { createdAt: firebase.firestore.FieldValue }
@@ -39,8 +31,6 @@ type UnionDTO = TextMessageDTO | NoteMessageDTO | ImageMessageDTO
 function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
   if (isNote(message)) {
     return {
-      memberIds: message.memberIds,
-      groupId: message.groupId,
       noteId: message.noteId,
       sentFromAccountId: message.sentFromAccountId,
       type: message.type,
@@ -49,8 +39,6 @@ function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
     }
   } else if (isText(message)) {
     return {
-      memberIds: message.memberIds,
-      groupId: message.groupId,
       sentFromAccountId: message.sentFromAccountId,
       type: message.type,
       text: message.text,
@@ -58,8 +46,6 @@ function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
     }
   } else {
     return {
-      memberIds: message.memberIds,
-      groupId: message.groupId,
       sentFromAccountId: message.sentFromAccountId,
       type: message.type,
       imageUrl: message.imageUrl,

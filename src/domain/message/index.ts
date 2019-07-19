@@ -1,4 +1,4 @@
-import { Message, TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from '../../entity/message'
+import { Message, TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from './entity'
 
 export function isTextMessage(message: Message): message is TextMessage {
   return message.type == MESSAGE_TYPE.TEXT
