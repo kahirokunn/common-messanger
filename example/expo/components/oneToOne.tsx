@@ -1,21 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { Subscription } from 'rxjs'
-import { sendTextMessage } from '../src/command/message/messageOneToOne'
-import { OneToOneMessageObserver } from '../src/query/message/messageOneToOne'
-import { PickItemTypeFromObservable } from '../src/submodule/type'
 import {
-  isNoteMessage,
-  isTextMessage
-} from '../src/domain/message'
+  MessageObserver
+} from '../src/query/message'
+import { PickItemTypeFromObservable } from '../src/submodule/type';
+import { isTextMessage, isNoteMessage } from '../src/domain/message'
+import { sendTextMessage } from '../src/command/message'
 
-type Message = PickItemTypeFromObservable<OneToOneMessageObserver['messages$']>[number]
+const roomId = '1'
+
+type Message = PickItemTypeFromObservable<MessageObserver['messages$']>[number]
 type Props = {};
 type State = {
   messages: Message[]
   subscription: Subscription | null
 };
-const messageOneToOne = new OneToOneMessageObserver();
+const messageObserver = new MessageObserver(roomId);
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -43,9 +44,8 @@ function renderMessage(message: Message) {
 }
 
 function onPress() {
-  sendTextMessage({
-    text: `Hello world! ${Math.random() * 100}`,
-    sentToAccountId: 'test'
+  sendTextMessage(roomId, {
+    text: `Hello world! ${Math.random() * 100}`
   })
 }
 
@@ -59,11 +59,11 @@ export default class OneToOne extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const subscription = messageOneToOne
+    const subscription = messageObserver
       .messages$
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
-    messageOneToOne.fetchMessage(10)
+    messageObserver.fetchMessage(10)
   }
 
   componentWillUnmount() {

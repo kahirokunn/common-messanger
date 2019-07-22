@@ -1,21 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { Subscription } from 'rxjs'
-import { sendTextMessage } from '../src/command/message/messageAdmin'
-import { AdminMessageObserver } from '../src/query/message/messageAdmin'
-import { PickItemTypeFromObservable } from '../src/submodule/type'
-import {
-  isNoteMessage,
-  isTextMessage
-} from '../src/domain/message'
+import { MessageObserver } from '../src/query/message';
+import { PickItemTypeFromObservable } from '../src/submodule/type';
+import { isTextMessage, isNoteMessage } from '../src/domain/message';
+import { sendTextMessage } from '../src/command/message';
 
-type Message = PickItemTypeFromObservable<AdminMessageObserver['messages$']>[number]
+const roomId = '3'
+
+type Message = PickItemTypeFromObservable<MessageObserver['messages$']>[number]
 type Props = {};
 type State = {
   messages: Message[]
   subscription: Subscription | null
 };
-const messageOneToOne = new AdminMessageObserver();
+const messageObserver = new MessageObserver(roomId);
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -43,13 +42,12 @@ function renderMessage(message: Message) {
 }
 
 function onPress() {
-  sendTextMessage({
+  sendTextMessage(roomId, {
     text: `Hello world! ${Math.random() * 100}`,
-    sentToAccountId: 'test'
   })
 }
 
-export default class OneToOne extends React.Component<Props, State> {
+export default class Admin extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -59,11 +57,11 @@ export default class OneToOne extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const subscription = messageOneToOne
+    const subscription = messageObserver
       .messages$
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
-    messageOneToOne.fetchMessage(10)
+    messageObserver.fetchMessage(10)
   }
 
   componentWillUnmount() {

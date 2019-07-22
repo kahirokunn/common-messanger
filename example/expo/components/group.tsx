@@ -1,21 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { Subscription } from 'rxjs'
-import { sendTextMessage } from '../src/command/message/messageGroup'
-import { GroupMessageObserver } from '../src/query/message/messageGroup'
-import { PickItemTypeFromObservable } from '../src/submodule/type'
-import {
-  isNoteMessage,
-  isTextMessage
-} from '../src/domain/messageGroup'
+import { MessageObserver } from '../src/query/message';
+import { PickItemTypeFromObservable } from '../src/submodule/type';
+import { isTextMessage, isNoteMessage } from '../src/domain/message';
+import { sendTextMessage } from '../src/command/message';
 
-type Message = PickItemTypeFromObservable<GroupMessageObserver['messages$']>[number]
+const roomId = '2'
+
+type Message = PickItemTypeFromObservable<MessageObserver['messages$']>[number]
 type Props = {};
 type State = {
   messages: Message[]
   subscription: Subscription | null
 };
-const messageOneToOne = new GroupMessageObserver();
+const messageObserver = new MessageObserver(roomId);
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -42,11 +41,8 @@ function renderMessage(message: Message) {
   }
 }
 
-const groupId = 'cb9823e9-fa82-4e4f-b363-b42f73103b7c'
-
 function onPress() {
-  sendTextMessage({
-    groupId,
+  sendTextMessage(roomId, {
     text: `Hello world! ${Math.random() * 100}`,
   })
 }
@@ -61,11 +57,11 @@ export default class Group extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const subscription = messageOneToOne
+    const subscription = messageObserver
       .messages$
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
-    messageOneToOne.fetchMessage(groupId, 10)
+    messageObserver.fetchMessage(10)
   }
 
   componentWillUnmount() {
