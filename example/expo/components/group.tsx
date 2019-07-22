@@ -1,20 +1,23 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native'
 import { Subscription } from 'rxjs'
-import { MessageObserver } from '../src/query/message';
-import { PickItemTypeFromObservable } from '../src/submodule/type';
-import { isTextMessage, isNoteMessage } from '../src/domain/message';
-import { sendTextMessage } from '../src/command/message';
+import {
+  MessageObserver,
+  isTextMessage,
+  isNoteMessage,
+  sendTextMessage,
+} from 'common-messanger'
+import { PickItemTypeFromObservable } from 'common-messanger/lib/submodule/type';
 
 const roomId = '2'
 
 type Message = PickItemTypeFromObservable<MessageObserver['messages$']>[number]
-type Props = {};
+type Props = {}
 type State = {
   messages: Message[]
   subscription: Subscription | null
-};
-const messageObserver = new MessageObserver(roomId);
+}
+const messageObserver = new MessageObserver(roomId)
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -49,7 +52,7 @@ function onPress() {
 
 export default class Group extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       messages: [],
       subscription: null,
@@ -91,7 +94,7 @@ export default class Group extends React.Component<Props, State> {
           </ScrollView>
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -102,4 +105,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})

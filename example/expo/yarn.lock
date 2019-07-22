@@ -2193,6 +2193,11 @@ commander@~2.13.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
   integrity sha512-MVuS359B+YzaWqjCL/c+22gfryv+mCBPHAv3zyVI2GN8EY6IRP8VwtasXn8jyyhvvq84R4ImN1OKRtcbIasjYA==
 
+common-messanger@^1.0.25:
+  version "1.0.25"
+  resolved "https://registry.yarnpkg.com/common-messanger/-/common-messanger-1.0.25.tgz#47276e051c912565ac081eccdad1df8465439b08"
+  integrity sha512-wpz2ROoTfEF2hbC6rFablRADa9MLaJsFQD3VEd4doH4Wlp+zIOaRDFvlQYY2IKoI7nilVn0ximmxGQcZi8hf8A==
+
 commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"

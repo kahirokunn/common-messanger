@@ -2,7 +2,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import firebase from 'firebase/app'
 import config from './config.json'
-import { installApp } from './src'
+import { installApp } from 'common-messanger'
 import Admin from './components/oneToOne'
 
 const app = firebase.initializeApp(config)

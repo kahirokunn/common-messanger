@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { Subscription } from 'rxjs'
-import { MessageObserver } from '../src/query/message';
-import { PickItemTypeFromObservable } from '../src/submodule/type';
-import { isTextMessage, isNoteMessage } from '../src/domain/message';
-import { sendTextMessage } from '../src/command/message';
+import {
+  MessageObserver,
+  isTextMessage,
+  isNoteMessage,
+  sendTextMessage,
+} from 'common-messanger';
+import { PickItemTypeFromObservable } from 'common-messanger/lib/submodule/type';
 
 const roomId = '3'
 
