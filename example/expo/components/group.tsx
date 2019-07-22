@@ -6,18 +6,18 @@ import {
   isTextMessage,
   isNoteMessage,
   sendTextMessage,
+  Message,
 } from 'common-messanger'
-import { PickItemTypeFromObservable } from 'common-messanger/lib/submodule/type';
+import { filter, map } from 'rxjs/operators';
 
 const roomId = '2'
 
-type Message = PickItemTypeFromObservable<MessageObserver['messages$']>[number]
 type Props = {}
 type State = {
   messages: Message[]
   subscription: Subscription | null
 }
-const messageObserver = new MessageObserver(roomId)
+const messageObserver = new MessageObserver()
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -62,9 +62,11 @@ export default class Group extends React.Component<Props, State> {
   componentDidMount() {
     const subscription = messageObserver
       .messages$
+      .pipe(filter(data => data.roomId === roomId))
+      .pipe(map(data => data.messages))
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
-    messageObserver.fetchMessage(10)
+    messageObserver.fetchMessage(roomId, 10)
   }
 
   componentWillUnmount() {

@@ -1,9 +1,9 @@
 {
-  "apiKey": "***************************",
-  "authDomain": "***********************",
-  "databaseURL": "**********************",
-  "projectId": "************************",
-  "storageBucket": "*********************",
-  "messagingSenderId": "*****************",
-  "appId": "*****************************"
+  "apiKey": "AIzaSyBQEY63FxKFx67f0fESsZjImmG1KGbfQzQ",
+  "authDomain": "rolo-828a4.firebaseapp.com",
+  "databaseURL": "https://rolo-828a4.firebaseio.com",
+  "projectId": "rolo-828a4",
+  "storageBucket": "rolo-828a4.appspot.com",
+  "messagingSenderId": "463614527618",
+  "appId": "1:463614527618:web:a1405d492651f505"
 }

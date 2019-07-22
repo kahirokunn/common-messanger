@@ -7,7 +7,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "common-messanger": "^1.0.25",
+    "common-messanger": "^1.0.28",
     "expo": "^32.0.0",
     "firebase": "^6.0.2",
     "react": "16.5.0",
