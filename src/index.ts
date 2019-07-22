@@ -1,3 +1,4 @@
+export { Message } from "./domain/message/entity"
 export { isTextMessage, isNoteMessage, isImageMessage } from "./domain/message"
 export { installApp } from "./firebase"
 export { sendImageMessage, sendNoteMessage, sendTextMessage } from "./command/message"

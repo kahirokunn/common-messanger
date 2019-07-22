@@ -1,5 +1,5 @@
+import * as firebase from 'firebase/app'
 import { Omit } from "../../submodule/type";
-import { auth } from "../../firebase";
 import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from "../../domain/message/entity";
 import { Id } from "../../domain/message/type";
 
@@ -8,7 +8,7 @@ type InputNote = Omit<Omit<Omit<Omit<NoteMessage, 'type'>, 'createdAt'>, 'sentFr
 type InputImage = Omit<Omit<Omit<Omit<ImageMessage, 'type'>, 'createdAt'>, 'sentFromAccountId'>, 'id'>
 
 function setSharedProperty<T>(input: T): T & { createdAt: Date, sentFromAccountId: Id } {
-  const currentUser = auth().currentUser
+  const currentUser = firebase.auth().currentUser
   if (currentUser) {
     return {
       ...input,

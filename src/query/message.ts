@@ -35,26 +35,29 @@ function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
   const query = firestore.collection(getMessagePath(roomId))
   return collectionData<Document>(getPaginationQuery(query, limit, startAfter), 'id')
     .pipe(filter((dataList) => dataList.length > 0))
-    .pipe(map((dataList) => dataList.map(messageMapper)))
+    .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
 }
 
 export class MessageObserver {
-  private readonly _messages: Subject<Message[]> = new Subject<Message[]>()
-  private readonly _subscriptions: Subscription[] = []
+  private readonly _messages: Subject<{ roomId: Id, messages: Message[] }> = new Subject<{ roomId: Id, messages: Message[] }>()
+  private readonly _subscriptions: { [roomId: string]: Subscription[] } = {}
 
-  constructor(private readonly roomId: Id) { }
-
-  get messages$(): Observable<Message[]> {
+  get messages$(): Observable<{ roomId: Id, messages: Message[] }> {
     return this._messages
   }
 
-  public fetchMessage(limit: number, startAfter?: Date) {
-    const subscription = connectMessage(this.roomId, limit, startAfter).subscribe(this._messages)
-    this._subscriptions.push(subscription)
+  public fetchMessage(roomId: Id, limit: number, startAfter?: Date) {
+    const subscription = connectMessage(roomId, limit, startAfter).subscribe(this._messages)
+    if (!this._subscriptions[roomId]) {
+      this._subscriptions[roomId] = []
+    }
+    this._subscriptions[roomId].push(subscription)
   }
 
-  public depose() {
-    this._subscriptions
-      .map((subscription) => subscription.unsubscribe())
+  public depose(roomId: Id) {
+    if (this._subscriptions[roomId]) {
+      this._subscriptions[roomId]
+        .map((subscription) => subscription.unsubscribe())
+    }
   }
 }

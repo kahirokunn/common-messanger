@@ -5,6 +5,4 @@ export function installApp(instance: firebase.firestore.Firestore) {
   firestore = instance
 }
 
-const { auth } = firebase
-
-export { firebase, firestore, auth }
+export { firebase, firestore }
