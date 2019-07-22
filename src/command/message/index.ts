@@ -1,16 +1,31 @@
-import { firebase, firestore } from "../firebase";
-import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from "../domain/message/entity";
-import { Omit } from "../submodule/type";
-import { getMessagePath } from "../firebase/collectionSchema";
-import { Id } from "../domain/message/type";
+import { firebase, firestore } from "../../firebase";
+import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE, Message } from "../../domain/message/entity";
+import { Omit, Pick1th } from "../../submodule/type";
+import { getMessagePath } from "../../firebase/collectionSchema";
+import { Id } from "../../domain/message/type";
+import { noteMessageFactory, imageMessageFactory, textMessageFactory } from "../../domain/message/factory";
 
 type OmitIdTextMessage = Omit<TextMessage, 'id'>
 type OmitIdNoteMessage = Omit<NoteMessage, 'id'>
 type OmitIdImageMessage = Omit<ImageMessage, 'id'>
 type OmitIdMessage = OmitIdTextMessage | OmitIdNoteMessage | OmitIdImageMessage
 
-export function sendMessage(roomId: Id, message: OmitIdMessage) {
-  return firestore
+export async function sendImageMessage(roomId: Id, input: Pick1th<typeof imageMessageFactory>): Promise<void> {
+  await sendMessage(roomId, imageMessageFactory(input))
+}
+
+export async function sendNoteMessage(roomId: Id, input: Pick1th<typeof noteMessageFactory>): Promise<void> {
+  await sendMessage(roomId, noteMessageFactory(input))
+
+}
+
+export async function sendTextMessage(roomId: Id, input: Pick1th<typeof textMessageFactory>): Promise<void> {
+  await sendMessage(roomId, textMessageFactory(input))
+
+}
+
+function sendMessage(roomId: Id, message: OmitIdMessage) {
+  firestore
     .collection(getMessagePath(roomId))
     .add(mapEntityToDTO(message))
 }
