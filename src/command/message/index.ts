@@ -16,16 +16,14 @@ export async function sendImageMessage(roomId: Id, input: Pick1th<typeof imageMe
 
 export async function sendNoteMessage(roomId: Id, input: Pick1th<typeof noteMessageFactory>): Promise<void> {
   await sendMessage(roomId, noteMessageFactory(input))
-
 }
 
 export async function sendTextMessage(roomId: Id, input: Pick1th<typeof textMessageFactory>): Promise<void> {
   await sendMessage(roomId, textMessageFactory(input))
-
 }
 
 function sendMessage(roomId: Id, message: OmitIdMessage) {
-  firestore
+  return firestore
     .collection(getMessagePath(roomId))
     .add(mapEntityToDTO(message))
 }
