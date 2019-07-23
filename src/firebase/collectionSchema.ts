@@ -17,10 +17,18 @@ export type FirestoreSchema = {
   }
 }
 
+export function getAccountPath(): Path {
+  return 'accounts' as const
+}
+
 export function getRoomPath(): Path {
   return 'rooms' as const
 }
 
 export function getMessagePath(roomId: Id): Path {
   return `${getRoomPath()}/${roomId}/messages`
+}
+
+export function getAccountRoomPath(accountId: Id): Path {
+  return `${getAccountPath()}/${accountId}/rooms`
 }
