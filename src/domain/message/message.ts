@@ -1,4 +1,4 @@
-import { Id } from "./type"
+import { Id } from "../../firebase/type"
 
 export enum MESSAGE_TYPE {
   TEXT = 'TEXT',

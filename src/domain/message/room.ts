@@ -1,4 +1,4 @@
-import { Id } from "./type";
+import { Id } from "../../firebase/type";
 
 export enum ROOM_TYPE {
   DIRECT = 'DIRECT',
@@ -10,5 +10,6 @@ export type Room = {
   id: Id
   name: string
   roomType: ROOM_TYPE
-  memberIds: Array<Id>
+  memberIds: Id[]
+  lastReceivedAt: Date
 }

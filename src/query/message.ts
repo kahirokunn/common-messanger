@@ -2,8 +2,8 @@ import firebase from 'firebase'
 import { Observable, Subject, Subscription } from 'rxjs'
 import { collectionData } from 'rxfire/firestore';
 import { filter, map } from 'rxjs/operators';
-import { Message } from '../domain/message/entity';
-import { Id } from '../domain/message/type';
+import { Message } from '../domain/message/message';
+import { Id } from '../firebase/type';
 import { firestore } from '../firebase';
 import { getMessagePath } from '../firebase/collectionSchema';
 

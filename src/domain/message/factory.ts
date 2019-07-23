@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import { Omit } from "../../submodule/type";
-import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from "../../domain/message/entity";
-import { Id } from "../../domain/message/type";
+import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE } from "./message";
+import { Id } from "../../firebase/type";
 
 type InputText = Omit<Omit<Omit<Omit<TextMessage, 'type'>, 'createdAt'>, 'sentFromAccountId'>, 'id'>
 type InputNote = Omit<Omit<Omit<Omit<NoteMessage, 'type'>, 'createdAt'>, 'sentFromAccountId'>, 'id'>
