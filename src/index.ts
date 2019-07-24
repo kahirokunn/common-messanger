@@ -7,3 +7,4 @@ export { readMessage } from "./command/readMessage"
 
 export { MessageObserver } from "./query/message"
 export { UnreadMessageObserver } from "./query/timeline/unreadMessageSegments"
+export { RoomObserver } from "./query/timeline/room"

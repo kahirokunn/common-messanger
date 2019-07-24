@@ -35,7 +35,7 @@ type Item = { roomId: Id, unreadMessages: UnreadMessageSegment }
 
 export class UnreadMessageObserver {
   private readonly _unreadMessages: Subject<Item> = new Subject<Item>()
-  private readonly _subscriptions: { [roomId: string]: Subscription[] } = {}
+  private _subscriptions: { [roomId: string]: Subscription[] } = {}
 
   get unreadMessages$(): Observable<Item> {
     return this._unreadMessages
@@ -56,7 +56,8 @@ export class UnreadMessageObserver {
   public depose(roomId: Id) {
     if (this._subscriptions[roomId]) {
       this._subscriptions[roomId]
-        .map((subscription) => subscription.unsubscribe())
+        .forEach((subscription) => subscription.unsubscribe())
+      this._subscriptions[roomId] = []
     }
   }
 
@@ -66,7 +67,8 @@ export class UnreadMessageObserver {
       .forEach(roomId => {
         this
           ._subscriptions[roomId]
-          .map((subscription) => subscription.unsubscribe())
+          .forEach((subscription) => subscription.unsubscribe())
       })
+    this._subscriptions = {}
   }
 }

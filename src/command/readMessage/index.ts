@@ -1,5 +1,4 @@
 import { firebase, firestore } from "../../firebase";
-import { Omit } from "../../submodule/type";
 import { getAccountRoomPath } from "../../firebase/collectionSchema";
 import { Room } from "../../domain/account/room";
 

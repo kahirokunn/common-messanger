@@ -35,7 +35,6 @@ function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
   const query = firestore.collection(getMessagePath(roomId))
   return collectionData<MessageDoc>(getPaginationQuery(query, limit, startAfter), 'id')
     .pipe(filter((dataList) => dataList.length > 0))
-    .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
 }
 
 export class MessageObserver {
@@ -47,7 +46,9 @@ export class MessageObserver {
   }
 
   public fetchMessage(roomId: Id, limit: number, startAfter?: Date) {
-    const subscription = connectMessage(roomId, limit, startAfter).subscribe(this._messages)
+    const subscription = connectMessage(roomId, limit, startAfter)
+      .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
+      .subscribe(this._messages)
     if (!this._subscriptions[roomId]) {
       this._subscriptions[roomId] = []
     }
@@ -57,7 +58,7 @@ export class MessageObserver {
   public depose(roomId: Id) {
     if (this._subscriptions[roomId]) {
       this._subscriptions[roomId]
-        .map((subscription) => subscription.unsubscribe())
+        .forEach((subscription) => subscription.unsubscribe())
     }
   }
 }

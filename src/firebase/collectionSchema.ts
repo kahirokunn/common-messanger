@@ -1,6 +1,5 @@
 import { Room as PersonalizedRoom } from "../domain/account/room"
 import { Room } from "../domain/message/room"
-import { Omit } from "../submodule/type"
 import { Message } from "../domain/message/message"
 import { Id } from "./type";
 import { UnreadMessageSegment } from "../domain/account/unreadMessageSegment";
