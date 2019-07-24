@@ -9,6 +9,7 @@ import {
   Message,
   UnreadMessageObserver,
   RoomObserver,
+  TimelineObserver,
 } from 'common-messanger'
 import { filter, map } from 'rxjs/operators'
 import * as firebase from 'firebase/app'
@@ -88,6 +89,11 @@ export default class OneToOne extends React.Component<Props, State> {
         })
         console.log('fetchRooms')
         roomObserver.fetchRooms(10)
+
+        const timelineObserver = new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver())
+        timelineObserver.rooms$.subscribe(roomActivities => console.log('roomActivities', roomActivities))
+        console.log('fetch timelineObserver')
+        timelineObserver.fetchRooms(10)
       }
     })
   }
