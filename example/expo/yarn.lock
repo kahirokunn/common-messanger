@@ -2193,10 +2193,12 @@ commander@~2.13.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
   integrity sha512-MVuS359B+YzaWqjCL/c+22gfryv+mCBPHAv3zyVI2GN8EY6IRP8VwtasXn8jyyhvvq84R4ImN1OKRtcbIasjYA==
 
-common-messanger@^1.0.29:
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/common-messanger/-/common-messanger-1.0.29.tgz#0638f256f437b5643faad01b27e010f68695fd7e"
-  integrity sha512-kf5Fe4Khkud5Ouv5y6v7uaZ5Nj1AUZkkMeyFacZnldQwcJIHZzogO7zboqfzm1lYVpNoPkZA2T6SMIpNLQWGcA==
+common-messanger@^1.0.32:
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/common-messanger/-/common-messanger-1.0.32.tgz#99666d35cc517650a4183d1c27b88037b97c482a"
+  integrity sha512-et9nZCFklThn5OUy1yYnZPYl3gSpTiOvqsX5C5lDnOiJ8p/zc54D9sNgRkO4HbIPfPvDAY6sJo5jq2LzcS62rQ==
+  dependencies:
+    js-sha256 "^0.9.0"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -3760,6 +3762,11 @@ js-levenshtein@^1.1.3:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/js-levenshtein/-/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
   integrity sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==
+
+js-sha256@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

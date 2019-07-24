@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native'
 import { Subscription } from 'rxjs'
 import {
   MessageObserver,
@@ -7,17 +7,19 @@ import {
   isNoteMessage,
   sendTextMessage,
   Message,
+  UnreadMessageObserver,
 } from 'common-messanger'
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators'
+import * as firebase from 'firebase/app'
 
 const roomId = '1'
 
-type Props = {};
+type Props = {}
 type State = {
   messages: Message[]
   subscription: Subscription | null
-};
-const messageObserver = new MessageObserver();
+}
+const messageObserver = new MessageObserver()
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -52,7 +54,7 @@ function onPress() {
 
 export default class OneToOne extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       messages: [],
       subscription: null,
@@ -67,6 +69,17 @@ export default class OneToOne extends React.Component<Props, State> {
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
     messageObserver.fetchMessage(roomId, 10)
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const unreadMessageObserver = new UnreadMessageObserver()
+        unreadMessageObserver
+          .unreadMessages$
+          .subscribe((unreadMessages) => console.log(unreadMessages))
+
+        unreadMessageObserver.fetchUnreadMessages(roomId)
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -96,7 +109,7 @@ export default class OneToOne extends React.Component<Props, State> {
           </ScrollView>
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -107,4 +120,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})

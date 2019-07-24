@@ -7,8 +7,10 @@ import {
   isNoteMessage,
   sendTextMessage,
   Message,
+  UnreadMessageObserver,
 } from 'common-messanger';
 import { filter, map } from 'rxjs/operators';
+import * as firebase from 'firebase/app'
 
 const roomId = '3'
 
@@ -67,6 +69,17 @@ export default class Admin extends React.Component<Props, State> {
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
     messageObserver.fetchMessage(roomId, 10)
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const unreadMessageObserver = new UnreadMessageObserver()
+        unreadMessageObserver
+          .unreadMessages$
+          .subscribe((unreadMessages) => console.log(unreadMessages))
+
+        unreadMessageObserver.fetchUnreadMessages(roomId)
+      }
+    })
   }
 
   componentWillUnmount() {
