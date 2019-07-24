@@ -7,9 +7,9 @@ import { Id } from '../firebase/type';
 import { firestore } from '../firebase';
 import { getMessagePath } from '../firebase/collectionSchema';
 
-export type Document = Message & { createdAt: firebase.firestore.Timestamp }
+export type MessageDoc = Message & { createdAt: firebase.firestore.Timestamp }
 
-export function messageMapper(messageDocRef: Document): Message {
+export function messageMapper(messageDocRef: MessageDoc): Message {
   let createdAt
   if (messageDocRef.createdAt) {
     createdAt = messageDocRef.createdAt.toDate()
@@ -33,7 +33,7 @@ export function getPaginationQuery(query: firebase.firestore.Query, limit: numbe
 
 function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
   const query = firestore.collection(getMessagePath(roomId))
-  return collectionData<Document>(getPaginationQuery(query, limit, startAfter), 'id')
+  return collectionData<MessageDoc>(getPaginationQuery(query, limit, startAfter), 'id')
     .pipe(filter((dataList) => dataList.length > 0))
     .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
 }
