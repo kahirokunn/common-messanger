@@ -5,6 +5,8 @@ import { RoomActivity } from '../../domain/timeline/room'
 import { RoomObserver } from './room'
 import { UnreadMessageObserver } from './unreadMessageSegments'
 import { UnreadMessageSegment } from '../../domain/account/unreadMessageSegment'
+import { Message } from '../../domain/message/message';
+import { MessageObserver } from '../message';
 
 export type RoomDoc = Omit<Omit<Room, 'updatedAt'>, 'createdAt'> & {
   createdAt: firebase.firestore.Timestamp
@@ -19,60 +21,60 @@ export function roomMapper(roomDoc: RoomDoc): Room {
   }
 }
 
+
 type Item = RoomActivity[]
-type UnreadMessages = { [roomId: string]: UnreadMessageSegment[string][] }
+type KV<T> = { [roomId: string]: T }
+type UnreadMessages = KV<UnreadMessageSegment[string][]>
+type LastMessages = KV<Message>
 
-function isReady(rooms: Room[], unreadMessages: UnreadMessages) {
-  for (const room of rooms) {
-    if (room.id in unreadMessages === false) {
-      return false
-    }
-  }
-  return true
-}
-
-function roomActivityMapper(rooms: Room[], unreadMessages: UnreadMessages): RoomActivity[] {
+function roomActivityMapper(rooms: Room[], unreadMessages: UnreadMessages, lastMessages: LastMessages): RoomActivity[] {
   return rooms.map(room => ({
     ...room,
-    unreadMessages: unreadMessages[room.id],
-    lastMessage: {} as any,
+    unreadMessages: unreadMessages[room.id] || [],
+    lastMessage: lastMessages[room.id] || null,
   }))
 }
 
 export class TimelineObserver {
   private readonly _rooms: Subject<Item> = new Subject<Item>()
+  private readonly _subscriptions: Subscription[]
 
   constructor(
     private readonly roomObserver: RoomObserver,
-    private readonly unreadMessageObserver: UnreadMessageObserver
+    private readonly unreadMessageObserver: UnreadMessageObserver,
+    private readonly messageObserver: MessageObserver
   ) {
-    this
-      .roomObserver
-      .rooms$
-      .pipe(source => {
-        const unreadMessages: UnreadMessages = {}
-        let allRooms: Room[] = []
+    let allRooms: Room[] = []
+    let unreadMessages: UnreadMessages = {}
+    let lastMessages: LastMessages = {}
 
-        return new Observable<RoomActivity[]>(observer => {
-          this.unreadMessageObserver.unreadMessages$.subscribe(data => {
-            unreadMessages[data.roomId] = Object.values(data.unreadMessages)
-            if (isReady(allRooms, unreadMessages)) {
-              observer.next(roomActivityMapper(allRooms, unreadMessages))
-            }
+    this._subscriptions = [
+      this
+        .unreadMessageObserver
+        .unreadMessages$
+        .subscribe(data => {
+          unreadMessages[data.roomId] = Object.values(data.unreadMessages)
+          this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
+        }),
+      this
+        .messageObserver
+        .messages$
+        .subscribe(data => {
+          lastMessages[data.roomId] = data.messages[0]
+          this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
+        }),
+      this
+        .roomObserver
+        .rooms$
+        .subscribe(rooms => {
+          allRooms = allRooms.concat(rooms)
+          rooms.forEach(room => {
+            this.messageObserver.fetchMessage(room.id, 1)
+            this.unreadMessageObserver.fetchUnreadMessages(room.id)
           })
-
-          source.subscribe({
-            next: (rooms) => {
-              allRooms = allRooms.concat(rooms)
-              rooms.forEach(
-                room => this.unreadMessageObserver.fetchUnreadMessages(room.id)
-              )
-            },
-            error: (e) => observer.error(e),
-            complete: () => observer.complete(),
-          })
-        })
-      }).subscribe(this._rooms)
+          this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
+        }),
+    ]
   }
 
   get rooms$(): Observable<Item> {
@@ -84,7 +86,9 @@ export class TimelineObserver {
   }
 
   public depose() {
+    this._subscriptions.forEach(subscription => subscription.unsubscribe())
     this.roomObserver.depose()
     this.unreadMessageObserver.deposeAll()
+    this.messageObserver.deposeAll()
   }
 }

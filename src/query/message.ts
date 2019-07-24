@@ -61,4 +61,8 @@ export class MessageObserver {
         .forEach((subscription) => subscription.unsubscribe())
     }
   }
+
+  public deposeAll() {
+    Object.keys(this._subscriptions).forEach(roomId => this.depose(roomId))
+  }
 }
