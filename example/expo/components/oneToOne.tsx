@@ -8,6 +8,7 @@ import {
   sendTextMessage,
   Message,
   UnreadMessageObserver,
+  RoomObserver,
 } from 'common-messanger'
 import { filter, map } from 'rxjs/operators'
 import * as firebase from 'firebase/app'
@@ -72,12 +73,21 @@ export default class OneToOne extends React.Component<Props, State> {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        console.log('userId', user.uid)
         const unreadMessageObserver = new UnreadMessageObserver()
         unreadMessageObserver
           .unreadMessages$
-          .subscribe((unreadMessages) => console.log(unreadMessages))
+          .subscribe((unreadMessages) => console.log('unreadMessages', unreadMessages))
 
+        console.log('fetchUnreadMessages')
         unreadMessageObserver.fetchUnreadMessages(roomId)
+
+        const roomObserver = new RoomObserver()
+        roomObserver.rooms$.subscribe(rooms => {
+          console.log('rooms', rooms)
+        })
+        console.log('fetchRooms')
+        roomObserver.fetchRooms(10)
       }
     })
   }
