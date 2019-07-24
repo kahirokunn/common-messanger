@@ -6,3 +6,4 @@ export { sendImageMessage, sendNoteMessage, sendTextMessage } from "./command/me
 export { readMessage } from "./command/readMessage"
 
 export { MessageObserver } from "./query/message"
+export { UnreadMessageObserver } from "./query/timeline/unreadMessageSegments"

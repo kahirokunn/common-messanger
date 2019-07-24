@@ -13,7 +13,7 @@ export type FirestoreSchema = {
     messages: Collection<Omit<Message, 'id'>>
   }>,
   accounts: Collection<Omit<PersonalizedRoom, 'id'>> & {
-    unreadMessageSegments: Collection<Omit<UnreadMessageSegment, 'id'>>
+    unreadMessageSegments: Collection<UnreadMessageSegment>
   }
 }
 

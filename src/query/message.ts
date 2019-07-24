@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import * as firebase from 'firebase'
 import { Observable, Subject, Subscription } from 'rxjs'
 import { collectionData } from 'rxfire/firestore';
 import { filter, map } from 'rxjs/operators';
