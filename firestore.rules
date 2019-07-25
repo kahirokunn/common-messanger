@@ -22,10 +22,12 @@ service cloud.firestore {
     }
 
     match /accounts/{account} {
-      allow read, write: if request.auth.uid == account;
+      allow read, write: if isAuthenticated()
+                          && request.auth.uid == account;
 
       match /unreadMessages/{unreadMessageId} {
-        allow read, write: if request.auth.uid == account;
+        allow read, write: if isAuthenticated()
+                            && request.auth.uid == account;
       }
     }
   }
