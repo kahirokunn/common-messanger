@@ -56,7 +56,7 @@ function onPress() {
   })
 }
 
-export default class OneToOne extends React.Component<Props, State> {
+export default class Demo extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
