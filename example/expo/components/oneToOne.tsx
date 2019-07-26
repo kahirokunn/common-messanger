@@ -10,6 +10,7 @@ import {
   UnreadMessageObserver,
   RoomObserver,
   TimelineObserver,
+  readMessage
 } from 'common-messanger'
 import { filter, map } from 'rxjs/operators'
 import * as firebase from 'firebase/app'
@@ -20,6 +21,7 @@ type Props = {}
 type State = {
   messages: Message[]
   subscription: Subscription | null
+  beginAt: Date
 }
 const messageObserver = new MessageObserver()
 
@@ -60,6 +62,7 @@ export default class OneToOne extends React.Component<Props, State> {
     this.state = {
       messages: [],
       subscription: null,
+      beginAt: new Date()
     }
   }
 
@@ -74,28 +77,21 @@ export default class OneToOne extends React.Component<Props, State> {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('userId', user.uid)
         const unreadMessageObserver = new UnreadMessageObserver()
         unreadMessageObserver
           .unreadMessages$
-          .subscribe((unreadMessages) => console.log('unreadMessages', unreadMessages))
+          .subscribe((unreadMessages) => console.log('unreadMessages', Object.keys(unreadMessages.unreadMessages).length))
 
-        console.log('fetchUnreadMessages')
         unreadMessageObserver.fetchUnreadMessages(roomId)
 
-        const roomObserver = new RoomObserver()
-        roomObserver.rooms$.subscribe(rooms => {
-          console.log('rooms', rooms)
-        })
-        console.log('fetchRooms')
-        roomObserver.fetchRooms(10)
-
         const timelineObserver = new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver())
-        timelineObserver.rooms$.subscribe(roomActivities => console.log('roomActivities', roomActivities))
-        console.log('fetch timelineObserver')
         timelineObserver.fetchRooms(10)
       }
     })
+  }
+
+  readMessage() {
+    readMessage(roomId, this.state.beginAt, new Date())
   }
 
   componentWillUnmount() {
@@ -109,8 +105,14 @@ export default class OneToOne extends React.Component<Props, State> {
       <View style={styles.container}>
         <Text>Open up App.js to start working on your app!</Text>
         <Button
+          color="black"
           title={"add new Article"}
           onPress={() => onPress()}
+        />
+        <Button
+          color="black"
+          title={"read message"}
+          onPress={() => this.readMessage()}
         />
         <View style={{ height: 300 }} >
           <ScrollView>
