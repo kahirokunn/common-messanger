@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native'
 import { Subscription } from 'rxjs'
 import {
   MessageObserver,
@@ -7,17 +7,23 @@ import {
   isNoteMessage,
   sendTextMessage,
   Message,
+  UnreadMessageObserver,
+  RoomObserver,
+  TimelineObserver,
+  readMessage
 } from 'common-messanger'
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators'
+import * as firebase from 'firebase/app'
 
 const roomId = '1'
 
-type Props = {};
+type Props = {}
 type State = {
   messages: Message[]
   subscription: Subscription | null
-};
-const messageObserver = new MessageObserver();
+  beginAt: Date
+}
+const messageObserver = new MessageObserver()
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -50,12 +56,13 @@ function onPress() {
   })
 }
 
-export default class OneToOne extends React.Component<Props, State> {
+export default class Demo extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       messages: [],
       subscription: null,
+      beginAt: new Date()
     }
   }
 
@@ -67,6 +74,24 @@ export default class OneToOne extends React.Component<Props, State> {
       .subscribe(messages => this.setState({ messages }))
     this.setState({ subscription })
     messageObserver.fetchMessage(roomId, 10)
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const unreadMessageObserver = new UnreadMessageObserver()
+        unreadMessageObserver
+          .unreadMessages$
+          .subscribe((unreadMessages) => console.log('unreadMessages', Object.keys(unreadMessages.unreadMessages).length))
+
+        unreadMessageObserver.fetchUnreadMessages(roomId)
+
+        const timelineObserver = new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver())
+        timelineObserver.fetchRooms(10)
+      }
+    })
+  }
+
+  readMessage() {
+    readMessage(roomId, this.state.beginAt, new Date())
   }
 
   componentWillUnmount() {
@@ -80,8 +105,14 @@ export default class OneToOne extends React.Component<Props, State> {
       <View style={styles.container}>
         <Text>Open up App.js to start working on your app!</Text>
         <Button
+          color="black"
           title={"add new Article"}
           onPress={() => onPress()}
+        />
+        <Button
+          color="black"
+          title={"read message"}
+          onPress={() => this.readMessage()}
         />
         <View style={{ height: 300 }} >
           <ScrollView>
@@ -96,7 +127,7 @@ export default class OneToOne extends React.Component<Props, State> {
           </ScrollView>
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -107,4 +138,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})

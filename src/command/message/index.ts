@@ -1,6 +1,6 @@
 import { firebase, firestore } from "../../firebase";
 import { TextMessage, NoteMessage, ImageMessage, MESSAGE_TYPE, Message } from "../../domain/message/message";
-import { Omit, Pick1th } from "../../submodule/type";
+import { Pick1th } from "../../submodule/type";
 import { getMessagePath } from "../../firebase/collectionSchema";
 import { Id } from "../../firebase/type";
 import { noteMessageFactory, imageMessageFactory, textMessageFactory } from "../../domain/message/factory";
