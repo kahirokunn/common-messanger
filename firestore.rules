@@ -12,6 +12,9 @@ service cloud.firestore {
     function isCreatedTimeCorrect() {
       return request.time == request.resource.data.createdAt;
     }
+    function isOwnAccount(account) {
+      return request.auth.uid == account;
+    }
 
     match /rooms/{roomId} {
       allow read: if isAuthenticated()
@@ -29,7 +32,7 @@ service cloud.firestore {
 
     match /accounts/{account}/unreadMessages/{unreadMessageId} {
         allow read, write: if isAuthenticated()
-                            && request.auth.uid == account;
+                            && isOwnAccount(account);
     }
   }
 }
