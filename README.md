@@ -7,7 +7,7 @@ $ yarn add common-messanger
 ```
 
 ```typescript
-import firebase from 'firebase/app'
+import * as firebase from 'firebase/app'
 import { installApp } from 'common-messanger'
 import 'firebase/auth'
 import 'firebase/firestore'

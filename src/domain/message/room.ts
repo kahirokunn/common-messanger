@@ -11,5 +11,6 @@ export type Room = {
   name: string
   roomType: ROOM_TYPE
   memberIds: Id[]
-  lastReceivedAt: Date
+  createdAt: Date
+  updatedAt: Date
 }

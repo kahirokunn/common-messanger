@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "common-messanger",
-  "version": "1.0.28",
+  "version": "1.0.47",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build"
@@ -19,7 +19,9 @@
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "dependencies": {},
+  "dependencies": {
+    "js-sha256": "^0.9.0"
+  },
   "devDependencies": {
     "firebase": "6.0.2",
     "rxfire": "^3.5.0",
