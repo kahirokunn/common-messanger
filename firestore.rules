@@ -21,14 +21,9 @@ service cloud.firestore {
       }
     }
 
-    match /accounts/{account} {
-      allow read, write: if isAuthenticated()
-                          && request.auth.uid == account;
-
-      match /unreadMessages/{unreadMessageId} {
+    match /accounts/{account}/unreadMessages/{unreadMessageId} {
         allow read, write: if isAuthenticated()
                             && request.auth.uid == account;
-      }
     }
   }
 }
