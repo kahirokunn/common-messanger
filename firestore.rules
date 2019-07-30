@@ -9,15 +9,21 @@ service cloud.firestore {
     function isSentFromCorrectId() {
       return request.auth.uid == request.resource.data.sentFromAccountId;
     }
+    function isCreatedTimeCorrect() {
+      return request.time == request.resource.data.createdAt;
+    }
 
     match /rooms/{roomId} {
       allow read: if isAuthenticated()
                   && isUserInRoom(roomId)
       
       match /messages/{messageId} {
-        allow read, create: if isAuthenticated()
-                            && isUserInRoom(roomId)
-                            && isSentFromCorrectId();
+        allow read: if isAuthenticated()
+                        && isUserInRoom(roomId)
+        allow create: if isAuthenticated()
+                          && isUserInRoom(roomId)
+                          && isSentFromCorrectId()
+                          && isCreatedTimeCorrect();
       }
     }
 
