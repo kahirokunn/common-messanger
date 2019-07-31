@@ -3,36 +3,40 @@ service cloud.firestore {
     function isAuthenticated() {
       return request.auth.uid != null;
     }
-    function isUserInRoom(roomId) {
-      return request.auth.uid in get(/databases/$(database)/documents/rooms/$(roomId)).data.memberIds;
-    }
     function isSentFromCorrectId() {
       return request.auth.uid == request.resource.data.sentFromAccountId;
     }
     function isCreatedTimeCorrect() {
       return request.time == request.resource.data.createdAt;
     }
-    function isOwnAccount(account) {
-      return request.auth.uid == account;
+    function isOwnAccount(uid) {
+      return request.auth.uid == uid;
+    }
+    function isUserInRoom(room, uid) {
+      return uid in room.memberIds;
+    }
+    function isUserInRoomByFetch(roomId) {
+      return request.auth.uid in get(/databases/$(database)/documents/rooms/$(roomId)).data.memberIds
     }
 
     match /rooms/{roomId} {
       allow read: if isAuthenticated()
-                  && isUserInRoom(roomId)
-      
+                  && isUserInRoom(resource.data, request.auth.uid);
+
       match /messages/{messageId} {
         allow read: if isAuthenticated()
-                        && isUserInRoom(roomId)
+                    && isUserInRoomByFetch(roomId);
         allow create: if isAuthenticated()
-                          && isUserInRoom(roomId)
-                          && isSentFromCorrectId()
-                          && isCreatedTimeCorrect();
+                      && isUserInRoomByFetch(roomId)
+                      && isSentFromCorrectId()
+                      && isCreatedTimeCorrect();
       }
     }
 
-    match /accounts/{account}/unreadMessages/{unreadMessageId} {
-        allow read, write: if isAuthenticated()
-                            && isOwnAccount(account);
+    match /accounts/{uid}/rooms/{roomId}/unreadMessageSegments/{unreadMessageSegmentId} {
+      allow read, write: if isAuthenticated()
+                          && isUserInRoomByFetch(roomId)
+                          && isOwnAccount(uid);
     }
   }
 }
