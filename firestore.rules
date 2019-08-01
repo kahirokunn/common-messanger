@@ -20,7 +20,7 @@ service cloud.firestore {
     }
 
     match /rooms/{roomId} {
-      allow read: if isAuthenticated()
+      allow list: if isAuthenticated()
                   && isUserInRoom(resource.data, request.auth.uid);
 
       match /messages/{messageId} {
