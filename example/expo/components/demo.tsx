@@ -85,6 +85,7 @@ export default class Demo extends React.Component<Props, State> {
         unreadMessageObserver.fetchUnreadMessages(roomId)
 
         const timelineObserver = new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver())
+        timelineObserver.rooms$.subscribe(data => console.log(data))
         timelineObserver.fetchRooms(10)
       }
     })
