@@ -40,11 +40,13 @@ function connectRoom(limit: number, startAfter?: Date) {
     .pipe(filter((dataList) => dataList.length > 0))
 }
 
+export type RoomsData = Room[]
+
 export class RoomObserver {
-  private readonly _rooms: Subject<Room[]> = new Subject<Room[]>()
+  private readonly _rooms: Subject<RoomsData> = new Subject<RoomsData>()
   private _subscriptions: Subscription[] = []
 
-  get rooms$(): Observable<Room[]> {
+  get rooms$(): Observable<RoomsData> {
     return this._rooms
   }
 

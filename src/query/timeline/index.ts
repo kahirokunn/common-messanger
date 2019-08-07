@@ -1,16 +1,17 @@
-import * as firebase from 'firebase'
 import { Observable, Subject, Subscription } from 'rxjs'
 import { Room } from '../../domain/message/room'
 import { RoomActivity } from '../../domain/timeline/room'
-import { RoomObserver } from './room'
-import { UnreadMessageObserver } from './unreadMessageSegments'
+import { RoomObserver, RoomsData } from './room'
+import { UnreadMessageObserver, UnreadMessagesData } from './unreadMessageSegments'
 import { UnreadMessageSegment } from '../../domain/account/unreadMessageSegment'
 import { Message } from '../../domain/message/message';
-import { MessageObserver } from '../message';
+import { MessageObserver, MessagesData } from '../message';
+import { merge } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 export type RoomDoc = Omit<Omit<Room, 'updatedAt'>, 'createdAt'> & {
-  createdAt: firebase.firestore.Timestamp
-  updatedAt: firebase.firestore.Timestamp
+  createdAt: import('firebase').firestore.Timestamp
+  updatedAt: import('firebase').firestore.Timestamp
 }
 
 export function roomMapper(roomDoc: RoomDoc): Room {
@@ -37,7 +38,7 @@ function roomActivityMapper(rooms: Room[], unreadMessages: UnreadMessages, lastM
 
 export class TimelineObserver {
   private readonly _rooms: Subject<Item> = new Subject<Item>()
-  private readonly _subscriptions: Subscription[]
+  private readonly _subscription: Subscription
 
   constructor(
     private readonly roomObserver: RoomObserver,
@@ -48,33 +49,17 @@ export class TimelineObserver {
     let unreadMessages: UnreadMessages = {}
     let lastMessages: LastMessages = {}
 
-    this._subscriptions = [
-      this
-        .unreadMessageObserver
-        .unreadMessages$
-        .subscribe(data => {
-          unreadMessages[data.roomId] = Object.values(data.unreadMessages)
-          this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
-        }),
-      this
-        .messageObserver
-        .messages$
-        .subscribe(data => {
-          lastMessages[data.roomId] = data.messages[0]
-          this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
-        }),
-      this
-        .roomObserver
-        .rooms$
-        .subscribe(rooms => {
-          allRooms = allRooms.concat(rooms)
-          rooms.forEach(room => {
-            this.messageObserver.fetchMessage(room.id, 1)
-            this.unreadMessageObserver.fetchUnreadMessages(room.id)
-          })
-          this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
-        }),
-    ]
+    this._subscription = merge(
+      this.roomObserver.rooms$.pipe(tap(rooms => {
+        allRooms = allRooms.concat(rooms)
+        rooms.forEach(room => {
+          this.messageObserver.fetchMessage(room.id, 1)
+          this.unreadMessageObserver.fetchUnreadMessages(room.id)
+        })
+      })),
+      this.unreadMessageObserver.unreadMessages$.pipe(tap(data => unreadMessages[data.roomId] = Object.values(data.unreadMessages))),
+      this.messageObserver.messages$.pipe(tap(data => lastMessages[data.roomId] = data.messages[0])),
+    ).subscribe(() => this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages)))
   }
 
   get rooms$(): Observable<Item> {
@@ -86,7 +71,7 @@ export class TimelineObserver {
   }
 
   public depose() {
-    this._subscriptions.forEach(subscription => subscription.unsubscribe())
+    this._subscription.unsubscribe()
     this.roomObserver.depose()
     this.unreadMessageObserver.deposeAll()
     this.messageObserver.deposeAll()

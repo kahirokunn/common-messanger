@@ -37,11 +37,13 @@ function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
     .pipe(filter((dataList) => dataList.length > 0))
 }
 
+export type MessagesData = { roomId: Id, messages: Message[] }
+
 export class MessageObserver {
-  private readonly _messages: Subject<{ roomId: Id, messages: Message[] }> = new Subject<{ roomId: Id, messages: Message[] }>()
+  private readonly _messages: Subject<MessagesData> = new Subject<MessagesData>()
   private readonly _subscriptions: { [roomId: string]: Subscription[] } = {}
 
-  get messages$(): Observable<{ roomId: Id, messages: Message[] }> {
+  get messages$(): Observable<MessagesData> {
     return this._messages
   }
 

@@ -31,13 +31,13 @@ function connectUnreadMessageSegment(roomId: Id) {
     .pipe(filter((dataList) => dataList.length > 0))
 }
 
-type Item = { roomId: Id, unreadMessages: UnreadMessageSegment }
+export type UnreadMessagesData = { roomId: Id, unreadMessages: UnreadMessageSegment }
 
 export class UnreadMessageObserver {
-  private readonly _unreadMessages: Subject<Item> = new Subject<Item>()
+  private readonly _unreadMessages: Subject<UnreadMessagesData> = new Subject<UnreadMessagesData>()
   private _subscriptions: { [roomId: string]: Subscription[] } = {}
 
-  get unreadMessages$(): Observable<Item> {
+  get unreadMessages$(): Observable<UnreadMessagesData> {
     return this._unreadMessages
   }
 
