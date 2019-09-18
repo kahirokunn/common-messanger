@@ -51,7 +51,7 @@ export class TimelineObserver {
 
     this._subscription = merge(
       this.roomObserver.rooms$.pipe(tap(rooms => {
-        allRooms = allRooms.concat(rooms)
+        allRooms = rooms
         rooms.forEach(room => {
           this.messageObserver.fetchMessage(room.id, 1)
           this.unreadMessageObserver.fetchUnreadMessages(room.id)
