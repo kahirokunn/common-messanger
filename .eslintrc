@@ -1,0 +1,60 @@
+{
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "prettier/prettier": ["error", {
+      "arrowParens": "always",
+      "printWidth": 140,
+      "singleQuote": true,
+      "trailingComma": "all",
+      "semi": false
+    }],
+    "import/prefer-default-export": "off",
+    "object-shorthand": ["error", "properties"],
+    "prefer-destructuring": ["error", {
+      "array": false,
+      "object": true
+    }, {
+      "enforceForRenamedProperties": false
+    }],
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "vars": "all",
+      "args": "after-used",
+      "ignoreRestSiblings": false
+    }],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/camelcase": ["error", {
+      "properties": "never"
+    }],
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      "multiline": {
+        "delimiter": "none",
+        "requireLast": false
+      },
+      "singleline": {
+        "delimiter": "semi",
+        "requireLast": false
+      }
+    }]
+  },
+  "overrides": [{
+    "files": ["*.ts", "*.tsx"],
+    "rules": {
+      "@typescript-eslint/no-var-requires": ["error"],
+      "@typescript-eslint/no-useless-constructor": [
+        "error"
+      ]
+    }
+  }]
+}
