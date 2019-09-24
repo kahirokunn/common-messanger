@@ -23,14 +23,14 @@
     "js-sha256": "^0.9.0"
   },
   "devDependencies": {
-    "firebase": "6.0.2",
-    "rxfire": "^3.5.0",
-    "rxjs": "^6.5.2",
-    "typescript": "^3.5.1"
+    "firebase": "^6.6.2",
+    "rxfire": "^3.8.2",
+    "rxjs": "^6.5.3",
+    "typescript": "^3.6.3"
   },
   "peerDependencies": {
-    "firebase": "6.0.2",
-    "rxfire": "^3.5.0",
-    "rxjs": "^6.5.2"
+    "firebase": "^6.6.2",
+    "rxfire": "^3.8.2",
+    "rxjs": "^6.5.3"
   }
 }

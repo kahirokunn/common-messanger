@@ -4,10 +4,11 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "cp-common-messanger-to-node_modules": "rsync -r ../../ ./node_modules/common-messanger --exclude node_modules",
+    "postinstall": "npm run cp-common-messanger-to-node_modules"
   },
   "dependencies": {
-    "common-messanger": "^1.0.47",
     "expo": "^32.0.0",
     "firebase": "^6.0.2",
     "react": "16.5.0",
