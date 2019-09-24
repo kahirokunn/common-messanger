@@ -85,6 +85,6 @@ export class TimelineObserver {
     this._subscription.unsubscribe()
     this.roomObserver.depose()
     this.unreadMessageObserver.deposeAll()
-    this.messageObserver.deposeAll()
+    this.messageObserver.depose()
   }
 }
