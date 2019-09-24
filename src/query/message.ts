@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
-import { Observable, Subject, Subscription } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { collectionData } from 'rxfire/firestore'
-import { filter, map } from 'rxjs/operators'
+import { filter, map, takeUntil } from 'rxjs/operators'
 import { Message } from '../domain/message/message'
 import { Id } from '../firebase/type'
 import { firestore } from '../firebase'
@@ -39,31 +39,22 @@ function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
 export type MessagesData = { roomId: Id; messages: Message[] }
 
 export class MessageObserver {
-  private readonly _messages: Subject<MessagesData> = new Subject<MessagesData>()
+  private readonly _messages: Subject<MessagesData> = new Subject()
 
-  private readonly _subscriptions: { [roomId: string]: Subscription[] } = {}
+  private readonly _close: Subject<never> = new Subject()
 
   get messages$(): Observable<MessagesData> {
     return this._messages
   }
 
   public fetchMessage(roomId: Id, limit: number, startAfter?: Date) {
-    const subscription = connectMessage(roomId, limit, startAfter)
+    connectMessage(roomId, limit, startAfter)
       .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
+      .pipe(takeUntil(this._close))
       .subscribe(this._messages)
-    if (!this._subscriptions[roomId]) {
-      this._subscriptions[roomId] = []
-    }
-    this._subscriptions[roomId].push(subscription)
   }
 
-  public depose(roomId: Id) {
-    if (this._subscriptions[roomId]) {
-      this._subscriptions[roomId].forEach((subscription) => subscription.unsubscribe())
-    }
-  }
-
-  public deposeAll() {
-    Object.keys(this._subscriptions).forEach((roomId) => this.depose(roomId))
+  public depose() {
+    this._close.complete()
   }
 }
