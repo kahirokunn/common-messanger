@@ -1,7 +1,7 @@
-import { sha256 } from 'js-sha256';
+import { sha256 } from 'js-sha256'
 
 export function getRandomInt(max: number) {
-  return Math.floor(Math.random() * Math.floor(max));
+  return Math.floor(Math.random() * Math.floor(max))
 }
 
 // nodeSize以下の整数でできた乱数を取得し、それをsha256でハッシュ化し、hexエンコード

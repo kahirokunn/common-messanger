@@ -1,10 +1,10 @@
 import * as firebase from 'firebase'
 import { Observable, Subject, Subscription } from 'rxjs'
-import { collectionData } from 'rxfire/firestore';
-import { filter, map } from 'rxjs/operators';
-import { firestore } from '../../firebase';
-import { getRoomPath } from '../../firebase/collectionSchema';
-import { Room } from '../../domain/message/room';
+import { collectionData } from 'rxfire/firestore'
+import { filter, map } from 'rxjs/operators'
+import { firestore } from '../../firebase'
+import { getRoomPath } from '../../firebase/collectionSchema'
+import { Room } from '../../domain/message/room'
 
 export type RoomDoc = Omit<Omit<Room, 'updatedAt'>, 'createdAt'> & {
   createdAt: firebase.firestore.Timestamp
@@ -20,11 +20,11 @@ export function roomMapper(roomDoc: RoomDoc): Room {
 }
 
 function getPaginationQuery(query: firebase.firestore.Query, limit: number, startAfter?: Date) {
-  query = query.orderBy('updatedAt', 'desc').limit(limit)
+  let newQuery = query.orderBy('updatedAt', 'desc').limit(limit)
   if (startAfter) {
-    query = query.startAfter(startAfter)
+    newQuery = newQuery.startAfter(startAfter)
   }
-  return query
+  return newQuery
 }
 
 function connectRoom(limit: number, startAfter?: Date) {
@@ -32,18 +32,16 @@ function connectRoom(limit: number, startAfter?: Date) {
   if (!currentUser) {
     throw Error('failed to get current user from firebase auth sdk')
   }
-  let query = firestore
-    .collection(getRoomPath())
-    .where('memberIds', 'array-contains', currentUser.uid)
+  let query = firestore.collection(getRoomPath()).where('memberIds', 'array-contains', currentUser.uid)
   query = getPaginationQuery(query, limit, startAfter)
-  return collectionData<RoomDoc>(query, 'id')
-    .pipe(filter((dataList) => dataList.length > 0))
+  return collectionData<RoomDoc>(query, 'id').pipe(filter((dataList) => dataList.length > 0))
 }
 
 export type RoomsData = Room[]
 
 export class RoomObserver {
   private readonly _rooms: Subject<RoomsData> = new Subject<RoomsData>()
+
   private _subscriptions: Subscription[] = []
 
   get rooms$(): Observable<RoomsData> {
@@ -52,15 +50,14 @@ export class RoomObserver {
 
   public fetchRooms(limit: number, startAfter?: Date) {
     const subscription = connectRoom(limit, startAfter)
-      .pipe(map(rooms => rooms.map(roomMapper)))
+      .pipe(map((rooms) => rooms.map(roomMapper)))
       .subscribe(this._rooms)
 
     this._subscriptions.push(subscription)
   }
 
   public depose() {
-    this._subscriptions
-      .forEach((subscription) => subscription.unsubscribe())
+    this._subscriptions.forEach((subscription) => subscription.unsubscribe())
     this._subscriptions = []
   }
 }
