@@ -1,4 +1,4 @@
-import { Id } from "../../firebase/type";
+import { Id } from '../../firebase/type'
 
 export enum ROOM_TYPE {
   DIRECT = 'DIRECT',
