@@ -3,6 +3,6 @@ import { Message } from "../message/message";
 import { UnreadMessageSegment } from "../account/unreadMessageSegment";
 
 export type RoomActivity = Room & {
-  lastMessage: Omit<Message, 'id'> | null,
+  lastMessage: Message | null,
   unreadMessages: UnreadMessageSegment[string][]
 }
