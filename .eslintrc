@@ -1,8 +1,11 @@
 {
   "extends": [
-    "airbnb-base",
+    "airbnb",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:react/recommended",
+    "plugin:import/typescript",
+    "prettier",
+    "prettier/react"
   ],
   "plugins": ["@typescript-eslint", "prettier"],
   "parserOptions": {
@@ -46,7 +49,14 @@
         "delimiter": "semi",
         "requireLast": false
       }
-    }]
+    }],
+    "no-underscore-dangle": ["error", {
+      "allowAfterThis": true
+    }],
+    "react/jsx-filename-extension": ["error", {
+      "extensions": [".jsx", ".tsx"]
+    }],
+    "react/destructuring-assignment": "off"
   },
   "overrides": [{
     "files": ["*.ts", "*.tsx"],
