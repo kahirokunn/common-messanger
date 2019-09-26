@@ -53,14 +53,14 @@ export class UnreadMessageObserver {
     this._subscriptions[roomId].push(subscription)
   }
 
-  public depose(roomId: Id) {
+  public dispose(roomId: Id) {
     if (this._subscriptions[roomId]) {
       this._subscriptions[roomId].forEach((subscription) => subscription.unsubscribe())
       this._subscriptions[roomId] = []
     }
   }
 
-  public deposeAll() {
+  public disposeAll() {
     Object.keys(this._subscriptions).forEach((roomId) => {
       this._subscriptions[roomId].forEach((subscription) => subscription.unsubscribe())
     })
