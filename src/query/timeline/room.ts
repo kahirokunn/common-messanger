@@ -56,7 +56,7 @@ export class RoomObserver {
     this._subscriptions.push(subscription)
   }
 
-  public depose() {
+  public dispose() {
     this._subscriptions.forEach((subscription) => subscription.unsubscribe())
     this._subscriptions = []
   }

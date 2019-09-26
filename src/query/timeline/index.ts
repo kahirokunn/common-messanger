@@ -81,10 +81,10 @@ export class TimelineObserver {
     this.roomObserver.fetchRooms(limit, startAfter)
   }
 
-  public depose() {
+  public dispose() {
     this._subscription.unsubscribe()
-    this.roomObserver.depose()
-    this.unreadMessageObserver.deposeAll()
-    this.messageObserver.depose()
+    this.roomObserver.dispose()
+    this.unreadMessageObserver.disposeAll()
+    this.messageObserver.dispose()
   }
 }

@@ -54,7 +54,7 @@ export class MessageObserver {
       .subscribe(this._messages)
   }
 
-  public depose() {
+  public dispose() {
     this._close.complete()
   }
 }
