@@ -23,11 +23,14 @@ function getRoomMockData() {
 const mockData = getRoomMockData()
 const permissionDeniedError = { code: 'permission-denied' }
 
+setMockUserForTest(sentFrom)
+
 beforeEach(async () => {
   db = await setup({
     auth: sentFrom,
     data: mockData,
   })
+  installApp(db)
 })
 
 afterEach(async () => {
@@ -35,53 +38,44 @@ afterEach(async () => {
 })
 
 describe('sendTextMessage', () => {
+  const input = { text: 'first test message' } as const
+
   test('success sendTextMessage', async () => {
-    installApp(db)
-    setMockUserForTest(sentFrom)
     const room = mockData[Object.keys(mockData)[0]]
-    await sendTextMessage(room.id, { text: 'first test message' })
+    await sendTextMessage(room.id, input)
     await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
   })
 
   test('failed sendTextMessage to other room', async () => {
-    installApp(db)
-    setMockUserForTest(sentFrom)
     const room = mockData[Object.keys(mockData)[1]]
-    await expect(sendTextMessage(room.id, { text: 'first test message' })).rejects.toMatchObject(permissionDeniedError)
+    await expect(sendTextMessage(room.id, input)).rejects.toMatchObject(permissionDeniedError)
   })
 })
 
 describe('sendImageMessage', () => {
   const imageUrl = 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png' as const
   test('success sendImageMessage', async () => {
-    installApp(db)
-    setMockUserForTest(sentFrom)
     const room = mockData[Object.keys(mockData)[0]]
     await sendImageMessage(room.id, { imageUrl })
     await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
   })
 
   test('failed sendImageMessage to other room', async () => {
-    installApp(db)
-    setMockUserForTest(sentFrom)
     const room = mockData[Object.keys(mockData)[1]]
     await expect(sendImageMessage(room.id, { imageUrl })).rejects.toMatchObject(permissionDeniedError)
   })
 })
 
 describe('sendNoteMessage', () => {
+  const input = { noteId: uuid(), text: 'hello world' }
   test('success sendNoteMessage', async () => {
-    installApp(db)
-    setMockUserForTest(sentFrom)
     const room = mockData[Object.keys(mockData)[0]]
-    await sendNoteMessage(room.id, { noteId: uuid(), text: 'hello world' })
+    await sendNoteMessage(room.id, input)
     await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
   })
 
   test('failed sendNoteMessage to other room', async () => {
-    installApp(db)
-    setMockUserForTest(sentFrom)
     const room = mockData[Object.keys(mockData)[1]]
-    await expect(sendNoteMessage(room.id, { noteId: uuid(), text: 'hello world' })).rejects.toMatchObject(permissionDeniedError)
+    await expect(sendNoteMessage(room.id, input)).rejects.toMatchObject(permissionDeniedError)
   })
 })
