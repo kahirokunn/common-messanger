@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
 import { Observable, Subject } from 'rxjs'
 import { collectionData } from 'rxfire/firestore'
-import { filter, map, takeUntil } from 'rxjs/operators'
+import { filter, map, takeUntil, finalize } from 'rxjs/operators'
 import { Message } from '../domain/message/message'
 import { Id } from '../firebase/type'
 import { firestore } from '../firebase'
@@ -39,22 +39,22 @@ function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
 export type MessagesData = { roomId: Id; messages: Message[] }
 
 export class MessageObserver {
-  private readonly _messages: Subject<MessagesData> = new Subject()
+  private readonly _messages$: Subject<MessagesData> = new Subject()
 
-  private readonly _close: Subject<never> = new Subject()
+  private readonly _close$: Subject<never> = new Subject()
 
   get messages$(): Observable<MessagesData> {
-    return this._messages
+    return this._messages$.pipe(finalize(() => this._close$.complete()))
   }
 
   public fetchMessage(roomId: Id, limit: number, startAfter?: Date) {
     connectMessage(roomId, limit, startAfter)
       .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
-      .pipe(takeUntil(this._close))
-      .subscribe(this._messages)
+      .pipe(takeUntil(this._close$))
+      .subscribe(this._messages$)
   }
 
   public dispose() {
-    this._close.complete()
+    this._close$.complete()
   }
 }

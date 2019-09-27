@@ -1,5 +1,5 @@
-import { Observable, Subject, Subscription, merge } from 'rxjs'
-import { tap } from 'rxjs/operators'
+import { Observable, Subject, merge } from 'rxjs'
+import { tap, takeUntil, finalize } from 'rxjs/operators'
 import { Room } from '../../domain/message/room'
 import { RoomActivity } from '../../domain/timeline/room'
 import { RoomObserver } from './room'
@@ -35,9 +35,9 @@ function roomActivityMapper(rooms: Room[], unreadMessages: UnreadMessages, lastM
 }
 
 export class TimelineObserver {
-  private readonly _rooms: Subject<Item> = new Subject<Item>()
+  private readonly _rooms$: Subject<Item> = new Subject<Item>()
 
-  private readonly _subscription: Subscription
+  private readonly _close$: Subject<never> = new Subject()
 
   constructor(
     private readonly roomObserver: RoomObserver,
@@ -48,7 +48,7 @@ export class TimelineObserver {
     const unreadMessages: UnreadMessages = {}
     const lastMessages: LastMessages = {}
 
-    this._subscription = merge(
+    merge(
       this.roomObserver.rooms$.pipe(
         tap((rooms) => {
           allRooms = rooms
@@ -68,13 +68,15 @@ export class TimelineObserver {
           lastMessages[data.roomId] = data.messages[0]
         }),
       ),
-    ).subscribe(() => {
-      this._rooms.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
-    })
+    )
+      .pipe(takeUntil(this._close$))
+      .subscribe(() => {
+        this._rooms$.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
+      })
   }
 
   get rooms$(): Observable<Item> {
-    return this._rooms
+    return this._rooms$.pipe(finalize(() => this._close$.complete()))
   }
 
   public fetchRooms(limit: number, startAfter?: Date) {
@@ -82,9 +84,6 @@ export class TimelineObserver {
   }
 
   public dispose() {
-    this._subscription.unsubscribe()
-    this.roomObserver.dispose()
-    this.unreadMessageObserver.disposeAll()
-    this.messageObserver.dispose()
+    this._close$.complete()
   }
 }

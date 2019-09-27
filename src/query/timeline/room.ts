@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
-import { Observable, Subject, Subscription } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { collectionData } from 'rxfire/firestore'
-import { filter, map } from 'rxjs/operators'
+import { filter, map, takeUntil, finalize } from 'rxjs/operators'
 import { firestore } from '../../firebase'
 import { getRoomPath } from '../../firebase/collectionSchema'
 import { Room } from '../../domain/message/room'
@@ -40,24 +40,22 @@ function connectRoom(limit: number, startAfter?: Date) {
 export type RoomsData = Room[]
 
 export class RoomObserver {
-  private readonly _rooms: Subject<RoomsData> = new Subject<RoomsData>()
+  private readonly _rooms$: Subject<RoomsData> = new Subject<RoomsData>()
 
-  private _subscriptions: Subscription[] = []
+  private readonly _close$: Subject<never> = new Subject()
 
   get rooms$(): Observable<RoomsData> {
-    return this._rooms
+    return this._rooms$.pipe(finalize(() => this._close$.complete()))
   }
 
   public fetchRooms(limit: number, startAfter?: Date) {
-    const subscription = connectRoom(limit, startAfter)
+    connectRoom(limit, startAfter)
+      .pipe(takeUntil(this._close$))
       .pipe(map((rooms) => rooms.map(roomMapper)))
-      .subscribe(this._rooms)
-
-    this._subscriptions.push(subscription)
+      .subscribe(this._rooms$)
   }
 
   public dispose() {
-    this._subscriptions.forEach((subscription) => subscription.unsubscribe())
-    this._subscriptions = []
+    this._close$.complete()
   }
 }
