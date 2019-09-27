@@ -21,6 +21,7 @@ function getRoomMockData() {
 }
 
 const mockData = getRoomMockData()
+const permissionDeniedError = { code: 'permission-denied' } as const
 
 setMockUserForTest(sentFrom)
 
@@ -49,5 +50,16 @@ describe('MessageObserver', () => {
     })
     message.fetchMessage(room.id, 10)
     await sendTextMessage(room.id, input)
+  })
+
+  test('failed receive other room message', async (done) => {
+    const message = new MessageObserver()
+    message.messages$.subscribe({
+      error: (error) => {
+        expect(error).toMatchObject(permissionDeniedError)
+        done()
+      },
+    })
+    message.fetchMessage(uuid(), 10)
   })
 })

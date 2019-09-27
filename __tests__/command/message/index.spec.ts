@@ -21,7 +21,7 @@ function getRoomMockData() {
 }
 
 const mockData = getRoomMockData()
-const permissionDeniedError = { code: 'permission-denied' }
+const permissionDeniedError = { code: 'permission-denied' } as const
 
 setMockUserForTest(sentFrom)
 
