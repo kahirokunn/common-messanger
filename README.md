@@ -2,7 +2,7 @@
 
 ## Install App
 
-```
+```sh
 $ yarn add common-messanger
 ```
 
@@ -23,4 +23,10 @@ const app = firebase.initializeApp({
 })
 const firestore = firebase.firestore(app)
 installApp(firestore)
+```
+
+## Test
+
+```sh
+$ yarn test
 ```
