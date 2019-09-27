@@ -7,39 +7,46 @@ import { installApp } from '../../../src/firebase'
 import { setMockUserForTest } from '../../../src/firebase/user'
 import { setup, teardown } from '../../helper/setup'
 
-const testName = 'unit-test-message-commands'
 let db: firebase.firestore.Firestore
 const sentFrom = { uid: uuid() }
 const sentTo = { uid: uuid() }
 
 function getRoomMockData() {
-  const room = roomFactory({ memberIds: [sentFrom.uid, sentTo.uid] })
+  const room1 = roomFactory({ memberIds: [sentFrom.uid, sentTo.uid] })
+  const room2 = roomFactory({ memberIds: [uuid(), sentTo.uid] })
   return {
-    [`${getRoomPath()}/${room.id}`]: room,
+    [`${getRoomPath()}/${room1.id}`]: room1,
+    [`${getRoomPath()}/${room2.id}`]: room2,
   }
 }
 
 const mockData = getRoomMockData()
+const permissionDeniedError = { code: 'permission-denied' }
 
-describe(testName, () => {
-  beforeEach(async () => {
-    db = await setup({
-      auth: sentFrom,
-      data: mockData,
-    })
+beforeEach(async () => {
+  db = await setup({
+    auth: sentFrom,
+    data: mockData,
+  })
+})
+
+afterEach(async () => {
+  await teardown()
+})
+
+describe('sendTextMessage', () => {
+  test('success sendTextMessage', async () => {
+    installApp(db)
+    setMockUserForTest(sentFrom)
+    const room = mockData[Object.keys(mockData)[0]]
+    await sendTextMessage(room.id, { text: 'first test message' })
+    await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
   })
 
-  afterEach(async () => {
-    await teardown()
-  })
-
-  describe('sendTextMessage', () => {
-    test('success sendTextMessage', async () => {
-      installApp(db)
-      setMockUserForTest(sentFrom)
-      const room = mockData[Object.keys(mockData)[0]]
-      await sendTextMessage(room.id, { text: 'first test message' })
-      await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
-    })
+  test('failed sendTextMessage to other room', async () => {
+    installApp(db)
+    setMockUserForTest(sentFrom)
+    const room = mockData[Object.keys(mockData)[1]]
+    await expect(sendTextMessage(room.id, { text: 'first test message' })).rejects.toMatchObject(permissionDeniedError)
   })
 })
