@@ -4,6 +4,7 @@ import { UnreadMessageSegment } from '../../domain/account/unreadMessageSegment'
 import { Id } from '../../firebase/type'
 import { Message } from '../../domain/message/message'
 import { UnreadMessageSegmentDoc } from '../../query/timeline/unreadMessageSegments'
+import { getAccountId } from '../../firebase/user'
 
 type Input = {
   batch: firebase.firestore.WriteBatch
@@ -69,17 +70,13 @@ async function getAllUnreadMessageSegmentSnapshot(accountId: Id, roomId: Id): Pr
 }
 
 export async function readMessage(roomId: Id, beginAt: Date, endAt: Date): Promise<void> {
-  const { currentUser } = firebase.auth()
-  if (!currentUser) {
-    throw Error('failed to get current user from firebase auth sdk')
-  }
-
-  const unreadMessageSegments = await getAllUnreadMessageSegmentSnapshot(currentUser.uid, roomId)
+  const accountId = getAccountId()
+  const unreadMessageSegments = await getAllUnreadMessageSegmentSnapshot(accountId, roomId)
   const batch = firestore.batch()
   removeReadMessages({
     roomId,
     batch,
-    accountId: currentUser.uid,
+    accountId,
     beginAt,
     endAt,
     unreadMessageSegments,

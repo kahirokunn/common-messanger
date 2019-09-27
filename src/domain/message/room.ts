@@ -10,7 +10,7 @@ export type Room = {
   id: Id
   name: string
   roomType: ROOM_TYPE
-  memberIds: Id[]
+  memberIds: [Id, Id, ...Id[]]
   createdAt: Date
   updatedAt: Date
 }
