@@ -8,7 +8,7 @@
     "lint": "CURRENT_BRANCH=`git symbolic-ref --short HEAD` && git diff --name-only --diff-filter=ACMR origin/develop..${CURRENT_BRANCH} -- '*.ts' '*.tsx' '*.json' | xargs yarn eslint",
     "lintfix": "prettier --write '**/*.{ts,tsx}' && eslint --ext .tsx,.ts --fix .",
     "setup:test": "firebase setup:emulators:firestore",
-    "test": "firebase emulators:exec --only firestore \"npx jest\""
+    "test": "npx firebase emulators:exec --only firestore \"npx jest\""
   },
   "description": "common messanger modules",
   "repository": {
