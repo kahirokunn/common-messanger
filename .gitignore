@@ -67,5 +67,6 @@ lib/
 
 # firebase
 .firebaserc
+firestore-debug.log
 
 .expo
