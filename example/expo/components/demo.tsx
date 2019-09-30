@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import React from 'react'
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native'
-import { Subscription } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 import * as firebase from 'firebase/app'
 import {
@@ -22,10 +21,11 @@ const roomId = '1'
 type Props = {}
 type State = {
   messages: Message[]
-  subscription: Subscription | null
   beginAt: Date
+  messageObserver: MessageObserver
+  timelineObserver: TimelineObserver
+  unreadMessageObserver: UnreadMessageObserver
 }
-const messageObserver = new MessageObserver()
 
 function renderMessage(message: Message) {
   if (isTextMessage(message)) {
@@ -81,39 +81,36 @@ export default class Demo extends React.Component<Props, State> {
     super(props)
     this.state = {
       messages: [],
-      subscription: null,
       beginAt: new Date(),
+      messageObserver: new MessageObserver(),
+      unreadMessageObserver: new UnreadMessageObserver(),
+      timelineObserver: new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver()),
     }
   }
 
   componentDidMount() {
-    const subscription = messageObserver.messages$
+    this.state.messageObserver.messages$
       .pipe(filter((data) => data.roomId === roomId))
       .pipe(map((data) => data.messages))
       .subscribe((messages) => this.setState({ messages }))
-    this.setState({ subscription })
-    messageObserver.fetchMessage(roomId, 10)
+
+    this.state.unreadMessageObserver.unreadMessages$.subscribe((unreadMessages) =>
+      console.log('unreadMessages', Object.keys(unreadMessages.unreadMessages).length),
+    )
+
+    this.state.timelineObserver.rooms$.subscribe((data) => console.log(data))
 
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const unreadMessageObserver = new UnreadMessageObserver()
-        unreadMessageObserver.unreadMessages$.subscribe((unreadMessages) =>
-          console.log('unreadMessages', Object.keys(unreadMessages.unreadMessages).length),
-        )
+      if (!user) return
 
-        unreadMessageObserver.fetchUnreadMessages(roomId)
-
-        const timelineObserver = new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver())
-        timelineObserver.rooms$.subscribe((data) => console.log(data))
-        timelineObserver.fetchRooms(10)
-      }
+      this.state.messageObserver.fetchMessage(roomId, 10)
+      this.state.unreadMessageObserver.fetchUnreadMessages(roomId)
+      this.state.timelineObserver.fetchRooms(10)
     })
   }
 
   componentWillUnmount() {
-    if (this.state.subscription) {
-      this.state.subscription.unsubscribe()
-    }
+    this.state.messageObserver.dispose()
   }
 
   readMessage() {
