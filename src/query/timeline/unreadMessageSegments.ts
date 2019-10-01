@@ -38,7 +38,7 @@ export class UnreadMessageObserver {
   private readonly _close$: Subject<never> = new Subject()
 
   get unreadMessages$(): Observable<UnreadMessagesData> {
-    return this._unreadMessages$.pipe(finalize(() => this._close$.complete()))
+    return this._unreadMessages$.pipe(finalize(() => this._close$.next()))
   }
 
   public fetchUnreadMessages(roomId: Id) {
@@ -50,6 +50,6 @@ export class UnreadMessageObserver {
   }
 
   public dispose() {
-    this._close$.complete()
+    this._close$.next()
   }
 }

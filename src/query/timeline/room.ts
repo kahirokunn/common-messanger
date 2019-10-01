@@ -45,7 +45,7 @@ export class RoomObserver {
   private readonly _close$: Subject<never> = new Subject()
 
   get rooms$(): Observable<RoomsData> {
-    return this._rooms$.pipe(finalize(() => this._close$.complete()))
+    return this._rooms$.pipe(finalize(() => this._close$.next()))
   }
 
   public fetchRooms(limit: number, startAfter?: Date) {
@@ -56,6 +56,6 @@ export class RoomObserver {
   }
 
   public dispose() {
-    this._close$.complete()
+    this._close$.next()
   }
 }

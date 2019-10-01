@@ -44,7 +44,7 @@ export class MessageObserver {
   private readonly _close$: Subject<never> = new Subject()
 
   get messages$(): Observable<MessagesData> {
-    return this._messages$.pipe(finalize(() => this._close$.complete()))
+    return this._messages$.pipe(finalize(() => this._close$.next()))
   }
 
   public fetchMessage(roomId: Id, limit: number, startAfter?: Date) {
@@ -55,6 +55,6 @@ export class MessageObserver {
   }
 
   public dispose() {
-    this._close$.complete()
+    this._close$.next()
   }
 }

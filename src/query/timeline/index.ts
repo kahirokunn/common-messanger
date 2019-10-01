@@ -49,7 +49,7 @@ export class TimelineObserver {
     const lastMessages: LastMessages = {}
 
     merge(
-      this.roomObserver.rooms$.pipe(
+      this.roomObserver.rooms$.pipe(takeUntil(this._close$)).pipe(
         tap((rooms) => {
           allRooms = rooms
           rooms.forEach((room) => {
@@ -58,12 +58,12 @@ export class TimelineObserver {
           })
         }),
       ),
-      this.unreadMessageObserver.unreadMessages$.pipe(
+      this.unreadMessageObserver.unreadMessages$.pipe(takeUntil(this._close$)).pipe(
         tap((data) => {
           unreadMessages[data.roomId] = Object.values(data.unreadMessages)
         }),
       ),
-      this.messageObserver.messages$.pipe(
+      this.messageObserver.messages$.pipe(takeUntil(this._close$)).pipe(
         tap((data) => {
           lastMessages[data.roomId] = data.messages[0]
         }),
@@ -76,7 +76,7 @@ export class TimelineObserver {
   }
 
   get rooms$(): Observable<Item> {
-    return this._rooms$.pipe(finalize(() => this._close$.complete()))
+    return this._rooms$.pipe(finalize(() => this._close$.next()))
   }
 
   public fetchRooms(limit: number, startAfter?: Date) {
@@ -84,6 +84,6 @@ export class TimelineObserver {
   }
 
   public dispose() {
-    this._close$.complete()
+    this._close$.next()
   }
 }
