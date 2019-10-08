@@ -2193,10 +2193,10 @@ commander@~2.13.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
   integrity sha512-MVuS359B+YzaWqjCL/c+22gfryv+mCBPHAv3zyVI2GN8EY6IRP8VwtasXn8jyyhvvq84R4ImN1OKRtcbIasjYA==
 
-common-messanger@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/common-messanger/-/common-messanger-1.3.0.tgz#07a809c050334ecd65b4c7e9bfb329ccdc557a40"
-  integrity sha512-539Z9f4pT4dBynLFAx5yZunGEE0+Ucv59UQ4xycLXCYVfSq8wei645Um/V1gxGbY3LKAJUXwtA2UzO6HE/IIfA==
+common-messanger@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/common-messanger/-/common-messanger-1.5.0.tgz#6422a0bc9133314305812b32ebf5c83fc19d8e36"
+  integrity sha512-8BxEeGxyOxf1nWXtpTxVwOyBh6uLt3hmYmGHnLA2UUVjELZuiD5z3JPCnEkCrWSz7vwO5MQud7dku8wDpYZF0A==
   dependencies:
     js-sha256 "^0.9.0"
 

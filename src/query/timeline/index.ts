@@ -79,7 +79,7 @@ export class TimelineObserver {
     return this._rooms$.pipe(finalize(() => this._close$.next()))
   }
 
-  public fetchRooms(limit: number, startAfter?: Date) {
+  public fetchRooms(limit?: number, startAfter?: Date) {
     this.roomObserver.fetchRooms(limit, startAfter)
   }
 

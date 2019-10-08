@@ -19,15 +19,20 @@ export function roomMapper(roomDoc: RoomDoc): Room {
   }
 }
 
-function getPaginationQuery(query: firebase.firestore.Query, limit: number, startAfter?: Date) {
-  let newQuery = query.orderBy('updatedAt', 'desc').limit(limit)
+function getPaginationQuery(query: firebase.firestore.Query, limit?: number, startAfter?: Date) {
+  let newQuery = query.orderBy('updatedAt', 'desc')
+
+  if (typeof limit !== 'undefined') {
+    newQuery = newQuery.limit(limit)
+  }
+
   if (startAfter) {
     newQuery = newQuery.startAfter(startAfter)
   }
   return newQuery
 }
 
-function connectRoom(limit: number, startAfter?: Date) {
+function connectRoom(limit?: number, startAfter?: Date) {
   const { currentUser } = firebase.auth()
   if (!currentUser) {
     throw Error('failed to get current user from firebase auth sdk')
@@ -48,7 +53,7 @@ export class RoomObserver {
     return this._rooms$.pipe(finalize(() => this._close$.next()))
   }
 
-  public fetchRooms(limit: number, startAfter?: Date) {
+  public fetchRooms(limit?: number, startAfter?: Date) {
     connectRoom(limit, startAfter)
       .pipe(takeUntil(this._close$))
       .pipe(map((rooms) => rooms.map(roomMapper)))

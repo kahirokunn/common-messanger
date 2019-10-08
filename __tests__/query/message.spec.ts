@@ -52,6 +52,18 @@ describe('MessageObserver', () => {
     await sendTextMessage(room.id, input)
   })
 
+  test('success receive message without limit', async (done) => {
+    const room = mockData[Object.keys(mockData)[0]]
+    const message = new MessageObserver()
+    message.messages$.subscribe((data) => {
+      expect(data.roomId).toEqual(room.id)
+      expect(data.messages.length).toEqual(1)
+      done()
+    })
+    message.fetchMessage(room.id)
+    await sendTextMessage(room.id, input)
+  })
+
   test('failed receive other room message', async (done) => {
     const message = new MessageObserver()
     message.messages$.subscribe({

@@ -103,7 +103,7 @@ export default class Demo extends React.Component<Props, State> {
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) return
 
-      this.state.messageObserver.fetchMessage(roomId, 10)
+      this.state.messageObserver.fetchMessage(roomId)
       this.state.unreadMessageObserver.fetchUnreadMessages(roomId)
       this.state.timelineObserver.fetchRooms(10)
     })

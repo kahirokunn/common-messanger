@@ -23,15 +23,19 @@ export function messageMapper(messageDocRef: MessageDoc): Message {
   }
 }
 
-export function getPaginationQuery(query: firebase.firestore.Query, limit: number, startAfter?: Date) {
-  let newQuery = query.orderBy('createdAt', 'desc').limit(limit)
+function getPaginationQuery(query: firebase.firestore.Query, limit?: number, startAfter?: Date) {
+  let newQuery = query.orderBy('createdAt', 'desc')
+
+  if (typeof limit !== 'undefined') {
+    newQuery = newQuery.limit(limit)
+  }
   if (startAfter) {
     newQuery = newQuery.startAfter(startAfter)
   }
   return newQuery
 }
 
-function connectMessage(roomId: Id, limit: number, startAfter?: Date) {
+function connectMessage(roomId: Id, limit?: number, startAfter?: Date) {
   const query = firestore.collection(getMessagePath(roomId))
   return collectionData<MessageDoc>(getPaginationQuery(query, limit, startAfter), 'id').pipe(filter((dataList) => dataList.length > 0))
 }
@@ -47,7 +51,7 @@ export class MessageObserver {
     return this._messages$.pipe(finalize(() => this._close$.next()))
   }
 
-  public fetchMessage(roomId: Id, limit: number, startAfter?: Date) {
+  public fetchMessage(roomId: Id, limit?: number, startAfter?: Date) {
     connectMessage(roomId, limit, startAfter)
       .pipe(map((dataList) => ({ roomId, messages: dataList.map(messageMapper) })))
       .pipe(takeUntil(this._close$))
