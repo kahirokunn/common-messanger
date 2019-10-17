@@ -1,3 +1,5 @@
+rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAuthenticated() {
@@ -9,6 +11,9 @@ service cloud.firestore {
     function isCreatedTimeCorrect() {
       return request.time == request.resource.data.createdAt;
     }
+    function isUpdatedTimeCorrect() {
+      return request.time == request.resource.data.updatedAt;
+    }
     function isOwnAccount(uid) {
       return request.auth.uid == uid;
     }
@@ -17,6 +22,14 @@ service cloud.firestore {
     }
     function isUserInRoomByFetch(roomId) {
       return request.auth.uid in get(/databases/$(database)/documents/rooms/$(roomId)).data.memberIds
+    }
+
+    match /{path=**}/alreadyReadMessages/{uid} {
+      allow list: if isAuthenticated() && isUserInRoomByFetch(resource.data.roomId);
+      allow create, update: if isAuthenticated()
+                    && isUserInRoomByFetch(resource.data.roomId)
+                    && isOwnAccount(uid)
+                    && isUpdatedTimeCorrect();
     }
 
     match /rooms/{roomId} {
