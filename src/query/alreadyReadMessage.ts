@@ -7,6 +7,7 @@ import { getAlreadyReadMessageCollectionName } from '../firebase/collectionSchem
 import { AlreadyReadMessage } from '../domain/account/alreadyReadMessage'
 import { Id } from '../firebase/type'
 import { getAccountId } from '../firebase/user'
+import { toDate } from '../firebase/timestamp'
 
 export type AlreadyReadMessageDoc = Omit<AlreadyReadMessage, 'updatedAt'> & {
   updatedAt: firebase.firestore.Timestamp
@@ -15,7 +16,7 @@ export type AlreadyReadMessageDoc = Omit<AlreadyReadMessage, 'updatedAt'> & {
 export function alreadyReadMessageMapper(alreadyReadMessageDoc: AlreadyReadMessageDoc): AlreadyReadMessage {
   return {
     ...alreadyReadMessageDoc,
-    updatedAt: alreadyReadMessageDoc.updatedAt.toDate(),
+    updatedAt: toDate(alreadyReadMessageDoc.updatedAt),
   }
 }
 

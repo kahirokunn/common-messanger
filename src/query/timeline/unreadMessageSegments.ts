@@ -7,6 +7,7 @@ import { MessageDoc } from '../message'
 import { firestore } from '../../firebase'
 import { getUnreadMessageSegmentPath } from '../../firebase/collectionSchema'
 import { Id } from '../../firebase/type'
+import { toDate } from '../../firebase/timestamp'
 
 export type UnreadMessageSegmentDoc = { [id: string]: MessageDoc }
 
@@ -15,7 +16,7 @@ export function unreadMessageSegmentMapper(unreadMessageSegmentDoc: UnreadMessag
   Object.keys(unreadMessageSegmentDoc).forEach((id) => {
     unreadMessageSegment[id] = {
       ...unreadMessageSegmentDoc[id],
-      createdAt: unreadMessageSegmentDoc[id].createdAt.toDate(),
+      createdAt: toDate(unreadMessageSegmentDoc[id].createdAt),
     }
   })
   return unreadMessageSegment

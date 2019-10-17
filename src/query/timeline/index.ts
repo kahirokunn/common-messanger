@@ -7,6 +7,7 @@ import { UnreadMessageObserver } from './unreadMessageSegments'
 import { UnreadMessageSegment } from '../../domain/account/unreadMessageSegment'
 import { Message } from '../../domain/message/message'
 import { MessageObserver } from '../message'
+import { toDate } from '../../firebase/timestamp'
 
 export type RoomDoc = Omit<Omit<Room, 'updatedAt'>, 'createdAt'> & {
   createdAt: import('firebase').firestore.Timestamp
@@ -16,8 +17,8 @@ export type RoomDoc = Omit<Omit<Room, 'updatedAt'>, 'createdAt'> & {
 export function roomMapper(roomDoc: RoomDoc): Room {
   return {
     ...roomDoc,
-    createdAt: roomDoc.createdAt.toDate(),
-    updatedAt: roomDoc.updatedAt.toDate(),
+    createdAt: toDate(roomDoc.createdAt),
+    updatedAt: toDate(roomDoc.updatedAt),
   }
 }
 
@@ -70,8 +71,13 @@ export class TimelineObserver {
       ),
     )
       .pipe(takeUntil(this._close$))
-      .subscribe(() => {
-        this._rooms$.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
+      .subscribe({
+        next: () => {
+          this._rooms$.next(roomActivityMapper(allRooms, unreadMessages, lastMessages))
+        },
+        error: (error) => {
+          this._rooms$.error(error)
+        },
       })
   }
 

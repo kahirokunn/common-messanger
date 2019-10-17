@@ -4,6 +4,7 @@ import { UnreadMessageSegment } from '../../domain/account/unreadMessageSegment'
 import { Id } from '../../firebase/type'
 import { Message } from '../../domain/message/message'
 import { UnreadMessageSegmentDoc } from '../../query/timeline/unreadMessageSegments'
+import { toDate } from '../../firebase/timestamp'
 
 type Input = {
   batch: firebase.firestore.WriteBatch
@@ -60,7 +61,7 @@ async function getAllUnreadMessageSegmentSnapshot(accountId: Id, roomId: Id): Pr
     Object.keys(unreadMessageSegmentDoc).forEach((messageId) => {
       output[unreadMessageSegmentDocSnap.id][messageId] = {
         ...unreadMessageSegmentDoc[messageId],
-        createdAt: unreadMessageSegmentDoc[messageId].createdAt.toDate(),
+        createdAt: toDate(unreadMessageSegmentDoc[messageId].createdAt),
       }
     })
   })
