@@ -14,6 +14,7 @@ import {
   RoomObserver,
   TimelineObserver,
   readMessage,
+  AlreadyReadMessageObserver,
 } from 'common-messanger'
 
 const roomId = '1'
@@ -25,6 +26,7 @@ type State = {
   messageObserver: MessageObserver
   timelineObserver: TimelineObserver
   unreadMessageObserver: UnreadMessageObserver
+  alreadyReadMessageObserver: AlreadyReadMessageObserver
 }
 
 function renderMessage(message: Message) {
@@ -85,6 +87,7 @@ export default class Demo extends React.Component<Props, State> {
       messageObserver: new MessageObserver(),
       unreadMessageObserver: new UnreadMessageObserver(),
       timelineObserver: new TimelineObserver(new RoomObserver(), new UnreadMessageObserver(), new MessageObserver()),
+      alreadyReadMessageObserver: new AlreadyReadMessageObserver(),
     }
   }
 
@@ -93,6 +96,8 @@ export default class Demo extends React.Component<Props, State> {
       .pipe(filter((data) => data.roomId === roomId))
       .pipe(map((data) => data.messages))
       .subscribe((messages) => this.setState({ messages }))
+
+    this.state.alreadyReadMessageObserver.alreadyReadMessages$.subscribe((v) => console.log(v))
 
     this.state.unreadMessageObserver.unreadMessages$.subscribe((unreadMessages) =>
       console.log('unreadMessages', Object.keys(unreadMessages.unreadMessages).length),
@@ -113,8 +118,8 @@ export default class Demo extends React.Component<Props, State> {
     this.state.messageObserver.dispose()
   }
 
-  readMessage() {
-    readMessage(roomId, this.state.beginAt, new Date())
+  async readMessage() {
+    await readMessage(roomId, this.state.beginAt, new Date())
   }
 
   render() {

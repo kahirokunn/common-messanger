@@ -6,20 +6,14 @@ import { Message } from '../domain/message/message'
 import { Id } from '../firebase/type'
 import { firestore } from '../firebase'
 import { getMessagePath } from '../firebase/collectionSchema'
+import { toDate } from '../firebase/timestamp'
 
 export type MessageDoc = Message & { createdAt: firebase.firestore.Timestamp }
 
 export function messageMapper(messageDocRef: MessageDoc): Message {
-  let createdAt
-  if (messageDocRef.createdAt) {
-    createdAt = messageDocRef.createdAt.toDate()
-  } else {
-    createdAt = new Date()
-  }
-
   return {
     ...messageDocRef,
-    createdAt,
+    createdAt: toDate(messageDocRef.createdAt),
   }
 }
 

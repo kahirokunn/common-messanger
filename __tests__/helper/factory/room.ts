@@ -5,7 +5,7 @@ let id = 0
 
 type Base = Partial<Room> & { memberIds: Room['memberIds'] }
 
-export function roomFactory<T extends Base>(overrides: T): Room & T {
+export function roomFactory<T extends Base = never>(overrides: T): Room & T {
   id += 1
   return {
     id,

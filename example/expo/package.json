@@ -10,19 +10,19 @@
   },
   "dependencies": {
     "common-messanger": "^1.5.0",
-    "expo": "^32.0.0",
-    "firebase": "^6.0.2",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "rxfire": "^3.5.0",
-    "rxjs": "^6.5.2"
+    "expo": "^35.0.0",
+    "firebase": "^7.2.0",
+    "react": "^16.10.2",
+    "react-native": "^0.61.2",
+    "rxfire": "^3.8.5",
+    "rxjs": "^6.5.3"
   },
   "devDependencies": {
     "@types/expo": "^32.0.13",
-    "@types/react": "^16.8.18",
-    "@types/react-native": "^0.57.59",
-    "babel-preset-expo": "^5.0.0",
-    "typescript": "^3.5.1"
+    "@types/react": "^16.9.7",
+    "@types/react-native": "^0.60.21",
+    "babel-preset-expo": "^7.1.0",
+    "typescript": "^3.6.4"
   },
   "private": true
 }
