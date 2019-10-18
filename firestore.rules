@@ -5,6 +5,9 @@ service cloud.firestore {
     function isAuthenticated() {
       return request.auth.uid != null;
     }
+    function isAdmin() {
+      return request.auth.uid == 'admin';
+    }
     function isSentFromCorrectId() {
       return request.auth.uid == request.resource.data.sentFromAccountId;
     }
@@ -34,11 +37,11 @@ service cloud.firestore {
 
     match /rooms/{roomId} {
       allow list: if isAuthenticated()
-                  && isUserInRoom(resource.data, request.auth.uid);
+                  && (isUserInRoom(resource.data, request.auth.uid) || isAdmin());
 
       match /messages/{messageId} {
         allow read: if isAuthenticated()
-                    && isUserInRoomByFetch(roomId);
+                    && (isUserInRoomByFetch(roomId) || isAdmin());
         allow create: if isAuthenticated()
                       && isUserInRoomByFetch(roomId)
                       && isSentFromCorrectId()
