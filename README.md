@@ -30,3 +30,25 @@ installApp(firestore)
 ```sh
 $ yarn test
 ```
+
+## Don't forget call dispose
+
+```typescript
+import {
+  MessageObserver,
+} from 'common-messanger'
+
+// initialized
+const messageObserver = new MessageObserver()
+
+// just call once
+messageObserver.messages$
+  .pipe(map((data) => data.messages))
+  .subscribe((messages) => this.setState({ messages }))
+
+// when you want to fetch all messages
+messageObserver.fetchMessage(roomId)
+
+// when component will unmount
+messageObserver.dispose()
+```
