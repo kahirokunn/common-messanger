@@ -16,11 +16,11 @@ function mapToRoomMessagesData(messages: Message[], alreadyReadMessages: Already
     createdAt: msg.createdAt,
     readCount: 0,
   }))
-  alreadyReadMessages.forEach((alreadyReadMessage, index) => {
+  alreadyReadMessages.forEach((alreadyReadMessage) => {
     if (alreadyReadMessage.readAccountId === accountId) {
       return
     }
-    messages.forEach((msg) => {
+    messages.forEach((msg, index) => {
       if (alreadyReadMessage.updatedAt >= msg.createdAt) {
         readCounts[index].readCount += 1
       }
