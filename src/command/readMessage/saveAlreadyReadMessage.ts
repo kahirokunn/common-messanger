@@ -13,7 +13,7 @@ function mapEntityToDTO(entity: Input): DTO {
   }
 }
 
-export async function saveAlreadyReadMessage(input: Input) {
+export function saveAlreadyReadMessage(input: Input) {
   return firestore
     .collection(getAlreadyReadMessagePath(input.accountId, input.roomId))
     .doc(input.accountId)
