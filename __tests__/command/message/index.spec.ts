@@ -82,15 +82,16 @@ describe('sendNoteMessage', () => {
 
 describe('sendMediaMessage', () => {
   const fileUrl = 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.pdf' as const
-  const mediaType = 'MOVIE'
+  const mediaType = 'PDF'
+  const fileName = 'mediaTestFile'
   test('success sendMediaMessage', async () => {
     const room = mockData[Object.keys(mockData)[0]]
-    await sendMediaMessage(room.id, { mediaType, fileUrl })
+    await sendMediaMessage(room.id, { mediaType, fileUrl, fileName })
     await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
   })
 
   test('failed sendImageMessage to other room', async () => {
     const room = mockData[Object.keys(mockData)[1]]
-    await expect(sendMediaMessage(room.id, { mediaType, fileUrl })).rejects.toMatchObject(permissionDeniedError)
+    await expect(sendMediaMessage(room.id, { mediaType, fileUrl, fileName })).rejects.toMatchObject(permissionDeniedError)
   })
 })

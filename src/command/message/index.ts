@@ -47,6 +47,7 @@ function mapEntityToDTO(message: OmitIdMessage): UnionDTO {
       type: message.type,
       mediaType: message.mediaType,
       fileUrl: message.fileUrl,
+      fileName: message.fileName,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     }
   }

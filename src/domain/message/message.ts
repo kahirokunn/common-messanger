@@ -33,6 +33,7 @@ export type MediaMessage = Shared & {
   type: MESSAGE_TYPE.MEDIA
   mediaType: 'PDF' | 'MOVIE'
   fileUrl: string
+  fileName: string
 }
 
 export type Message = TextMessage | NoteMessage | ImageMessage | MediaMessage
