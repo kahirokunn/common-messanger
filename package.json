@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "common-messanger",
-  "version": "1.6.2",
+  "version": "1.7.2",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
@@ -27,12 +27,12 @@
     "js-sha256": "^0.9.0"
   },
   "devDependencies": {
-    "@firebase/testing": "^0.14.0",
+    "@firebase/testing": "^0.16.4",
     "@types/app-root-path": "^1.2.4",
     "@types/jest": "^24.0.19",
     "@types/uuid": "^3.4.5",
-    "@typescript-eslint/eslint-plugin": "^2.4.0",
-    "@typescript-eslint/parser": "^2.4.0",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
     "app-root-path": "^2.2.1",
     "eslint": "^6.5.1",
     "eslint-config-airbnb": "^18.0.1",
@@ -42,16 +42,16 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
-    "firebase": "^7.2.0",
-    "firebase-tools": "^7.6.0",
+    "firebase": "^7.6.1",
+    "firebase-tools": "^7.11.0",
     "husky": "^3.0.9",
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2",
-    "rxfire": "^3.8.5",
+    "rxfire": "^3.9.6",
     "rxjs": "^6.5.3",
     "ts-jest": "^24.1.0",
-    "typescript": "^3.6.4",
+    "typescript": "^3.7.4",
     "uuid": "^3.3.3"
   },
   "peerDependencies": {
