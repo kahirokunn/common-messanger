@@ -1,7 +1,7 @@
 import uuid from 'uuid/v4'
 import * as ftest from '@firebase/testing'
 import { roomFactory } from '../../helper/factory/room'
-import { sendTextMessage, sendImageMessage, sendNoteMessage } from '../../../src/command/message'
+import { sendTextMessage, sendImageMessage, sendNoteMessage, sendMediaMessage } from '../../../src/command/message'
 import { getMessagePath, getRoomPath } from '../../../src/firebase/collectionSchema'
 import { installApp } from '../../../src/firebase'
 import { setMockUserForTest } from '../../../src/firebase/user'
@@ -77,5 +77,21 @@ describe('sendNoteMessage', () => {
   test('failed sendNoteMessage to other room', async () => {
     const room = mockData[Object.keys(mockData)[1]]
     await expect(sendNoteMessage(room.id, input)).rejects.toMatchObject(permissionDeniedError)
+  })
+})
+
+describe('sendMediaMessage', () => {
+  const fileUrl = 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.pdf' as const
+  const mediaType = 'PDF'
+  const fileName = 'mediaTestFile'
+  test('success sendMediaMessage', async () => {
+    const room = mockData[Object.keys(mockData)[0]]
+    await sendMediaMessage(room.id, { mediaType, fileUrl, fileName })
+    await ftest.assertSucceeds(db.collection(getMessagePath(room.id)).get())
+  })
+
+  test('failed sendImageMessage to other room', async () => {
+    const room = mockData[Object.keys(mockData)[1]]
+    await expect(sendMediaMessage(room.id, { mediaType, fileUrl, fileName })).rejects.toMatchObject(permissionDeniedError)
   })
 })
