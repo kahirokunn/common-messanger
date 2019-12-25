@@ -1,6 +1,6 @@
 import { Observable, Subject, merge } from 'rxjs'
 import { takeUntil, finalize, tap } from 'rxjs/operators'
-import { Message, TextMessage, ImageMessage, NoteMessage } from '../domain/message/message'
+import { Message, TextMessage, ImageMessage, NoteMessage, MediaMessage } from '../domain/message/message'
 import { Id } from '../firebase/type'
 import { MessageObserver } from './message'
 import { AlreadyReadMessageObserver } from './alreadyReadMessage'
@@ -8,7 +8,11 @@ import { AlreadyReadMessage } from '../domain/account/alreadyReadMessage'
 import { getAccountId } from '../firebase/user'
 
 type MergeReadCount<T> = T & { readCount: number }
-type RoomMessagesData = (MergeReadCount<TextMessage> | MergeReadCount<ImageMessage> | MergeReadCount<NoteMessage>)[]
+type RoomMessagesData = (
+  | MergeReadCount<TextMessage>
+  | MergeReadCount<ImageMessage>
+  | MergeReadCount<NoteMessage>
+  | MergeReadCount<MediaMessage>)[]
 
 function mapToRoomMessagesData(messages: Message[], alreadyReadMessages: AlreadyReadMessage[]): RoomMessagesData {
   const accountId = getAccountId()

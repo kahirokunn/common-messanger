@@ -4,6 +4,7 @@ export enum MESSAGE_TYPE {
   TEXT = 'TEXT',
   IMAGE = 'IMAGE',
   NOTE = 'NOTE',
+  MEDIA = 'MEDIA',
 }
 
 type Shared = {
@@ -28,4 +29,10 @@ export type ImageMessage = Shared & {
   imageUrl: string
 }
 
-export type Message = TextMessage | NoteMessage | ImageMessage
+export type MediaMessage = Shared & {
+  type: MESSAGE_TYPE.MEDIA
+  mediaType: 'PDF' | 'MOVIE'
+  fileUrl: string
+}
+
+export type Message = TextMessage | NoteMessage | ImageMessage | MediaMessage
