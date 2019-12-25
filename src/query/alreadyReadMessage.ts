@@ -46,7 +46,7 @@ export class AlreadyReadMessageObserver {
 
   private readonly _close$: Subject<never> = new Subject()
 
-  private readonly accountId = getAccountId()
+  private accountId = ''
 
   get alreadyReadMessages$(): Observable<AlreadyReadMessageData> {
     return this._alreadyReadMessage$
@@ -55,6 +55,9 @@ export class AlreadyReadMessageObserver {
   }
 
   public fetchAlreadyReadMessages(roomId: Id, limit?: number, startAfter?: Date) {
+    if (!this.accountId) {
+      this.accountId = getAccountId()
+    }
     connectAlreadyReadMessages(roomId, limit, startAfter)
       .pipe(takeUntil(this._close$))
       .pipe(map((alreadyReadMessages) => alreadyReadMessages.map(alreadyReadMessageMapper)))

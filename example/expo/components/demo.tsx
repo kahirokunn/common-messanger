@@ -9,12 +9,14 @@ import {
   isTextMessage,
   isNoteMessage,
   sendTextMessage,
+  sendMediaMessage,
   Message,
   UnreadMessageObserver,
   RoomObserver,
   TimelineObserver,
   readMessage,
   AlreadyReadMessageObserver,
+  isMediaMessage,
 } from 'common-messanger'
 
 const roomId = '1'
@@ -52,6 +54,17 @@ function renderMessage(message: Message) {
       >{`noteId: ${message.noteId}`}</Text>
     )
   }
+  if (isMediaMessage(message)) {
+    return (
+      <Text
+        style={{
+          fontSize: 20,
+          color: 'black',
+          fontWeight: 'bold',
+        }}
+      >{`media file name: ${message.fileName}`}</Text>
+    )
+  }
   return (
     <Text
       style={{
@@ -66,6 +79,14 @@ function renderMessage(message: Message) {
 function onPress() {
   sendTextMessage(roomId, {
     text: `Hello world! ${Math.random() * 100}`,
+  })
+}
+
+function onMediaButtonPress() {
+  sendMediaMessage(roomId, {
+    fileUrl: 'https://twitter.com',
+    fileName: 'twitterLink',
+    mediaType: 'PDF',
   })
 }
 
@@ -127,6 +148,7 @@ export default class Demo extends React.Component<Props, State> {
       <View style={styles.container}>
         <Text>Open up App.js to start working on your app!</Text>
         <Button color="black" title="add new Article" onPress={() => onPress()} />
+        <Button color="black" title="add new Media" onPress={() => onMediaButtonPress()} />
         <Button color="black" title="read message" onPress={() => this.readMessage()} />
         <View style={{ height: 300 }}>
           <ScrollView>
