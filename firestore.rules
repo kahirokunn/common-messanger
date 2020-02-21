@@ -30,7 +30,7 @@ service cloud.firestore {
     match /{path=**}/alreadyReadMessages/{uid} {
       allow list: if isAuthenticated() && isUserInRoomByFetch(resource.data.roomId);
       allow create, update: if isAuthenticated()
-                    && isUserInRoomByFetch(resource.data.roomId)
+                    && isUserInRoomByFetch(request.resource.data.roomId)
                     && isOwnAccount(uid)
                     && isUpdatedTimeCorrect();
     }
