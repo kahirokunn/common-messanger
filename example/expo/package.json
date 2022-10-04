@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "common-messanger": "^1.7.3",
-    "expo": "^35.0.0",
+    "expo": "^35.0.1",
     "expo-cli": "^3.11.3",
     "firebase": "^7.6.1",
     "react": "16.8.3",
